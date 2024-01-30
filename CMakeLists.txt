@@ -8,7 +8,7 @@ add_compile_options(-Wall -ggdb)
 set(HDRS CXX/Headers)
 set(SRCS CXX/Sources)
 
-set(LIB_GLOB ${HDRS}/Glob.hpp ${SRCS}/Glob.cpp)
+set(LIB_GLOB ${HDRS}/Glob.hpp)
 set(LIB_Learning ${HDRS}/Learning.hpp ${SRCS}/Learning.cpp)
 
 include_directories(${HDRS})
