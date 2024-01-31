@@ -21,6 +21,7 @@ public:
     void GenerateQ(z_type const &s, z_type const &a);
     void Run(z_type Episode);
     void GetQ();
+    void GetState(r_type &Nu);
     void SetMeshHistory(vector_type &M);
     ~Learning();
 };

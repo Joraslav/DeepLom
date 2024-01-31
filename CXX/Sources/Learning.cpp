@@ -55,6 +55,11 @@ void Learning::Run(z_type Episode)
     {
         for (r_type h = this->t0; h < Time; h=h+dt)
         {
+            if (Epoch%50==0)
+            {
+                std::cout << "Epoch  =\t" << Epoch << std::endl;
+            }
+            
             std::cout << "Check " << h << std::endl;
         }
         Epoch++;
@@ -65,6 +70,20 @@ void Learning::Run(z_type Episode)
 void Learning::GetQ()
 {
     std::cout << this->Q;
+}
+
+void Learning::GetState(r_type &Nu)
+{
+    auto const nCols{this->Mesh.size()};
+
+    for (auto i{0u}; i < nCols; i++)
+    {
+        if (Nu>=Mesh[i] && Nu<=Mesh[i+1])
+        {
+            this->State = i;
+            break;
+        }
+    }
 }
 
 void Learning::SetMeshHistory(vector_type &M)
