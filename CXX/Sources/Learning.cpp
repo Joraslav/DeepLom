@@ -47,6 +47,17 @@ void Learning::GenerateQ(z_type const &s, z_type const &a)
     }
 }
 
+void Learning::Run(z_type Episode)
+{
+    z_type Epoch = 1;
+    std::cout << "Begin\n" << std::endl;
+    while (Epoch != Episode)
+    {
+        
+    }
+        
+}
+
 void Learning::GetQ()
 {
     std::cout << this->Q;

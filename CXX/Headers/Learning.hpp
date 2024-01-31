@@ -5,7 +5,6 @@
 
 using namespace tls;
 
-// template<class T>
 class Learning
 {
 private:
@@ -20,6 +19,7 @@ public:
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP);
     void GenerateQ(z_type const &s, z_type const &a);
+    void Run(z_type Episode);
     void GetQ();
     void SetMeshHistory(vector_type &M);
     ~Learning();

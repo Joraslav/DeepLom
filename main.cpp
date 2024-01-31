@@ -52,5 +52,6 @@ int main()
   test.GenerateQ(s,a);
   // test.SetMeshHistory(MeshSatate);
   test.GetQ();
+  test.Run(100);
   return 0;
 }
