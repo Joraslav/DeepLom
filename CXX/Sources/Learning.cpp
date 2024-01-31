@@ -53,7 +53,11 @@ void Learning::Run(z_type Episode)
     std::cout << "Begin\n" << std::endl;
     while (Epoch != Episode)
     {
-        
+        for (r_type h = this->t0; h < Time; h=h+dt)
+        {
+            std::cout << "Check " << h << std::endl;
+        }
+        Epoch++;
     }
         
 }
