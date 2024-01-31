@@ -50,7 +50,7 @@ int main()
   test.SetTime(Time);
   test.SetPath(QP,TrackP);
   test.GenerateQ(s,a);
-  test.SetMeshHistory(MeshSatate);
+  // test.SetMeshHistory(MeshSatate);
   test.GetQ();
   return 0;
 }

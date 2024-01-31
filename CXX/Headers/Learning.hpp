@@ -5,8 +5,6 @@
 
 using namespace tls;
 
-enum MeshHistFlags {ON, OFF};
-
 // template<class T>
 class Learning
 {
