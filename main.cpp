@@ -40,7 +40,8 @@ int main()
 
   std::cout << "Metric v1 and v2\n" << Metric(v1,v3) << std::endl;
 
-  st_type Metod = "SARSA", QP = "Q.txt", TrackP = "Track.txt";
+  st_type Metod = "SARSA";
+  st_type QP = "Q.txt", TrackP = "Track.txt", MeshHP = "MeshHistory.txt";
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
   z_type s=10, a=4;
   vector_tmpl<r_type> Time{0,0.1,1}; /*t0, dt, T*/
@@ -48,7 +49,7 @@ int main()
   Learning test(Metod,Epsi,Alfi,Gamu);
   test.SetMesh(MeshSatate);
   test.SetTime(Time);
-  test.SetPath(QP,TrackP);
+  test.SetPath(QP,TrackP,MeshHP);
   test.GenerateQ(s,a);
   // test.SetMeshHistory(MeshSatate);
   test.GetQ();
