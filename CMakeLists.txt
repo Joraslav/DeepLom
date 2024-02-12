@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.2)
+cmake_minimum_required(VERSION 3.22)
 project(Xyu VERSION ${CMAKE_VERSION} LANGUAGES CXX)
 
 add_compile_options(-Wall -ggdb)
