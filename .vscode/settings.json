@@ -48,5 +48,6 @@
         "ranges": "cpp",
         "span": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }
