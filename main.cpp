@@ -40,12 +40,33 @@ int main()
 
   std::cout << "Metric v1 and v2\n" << Metric(v1,v3) << std::endl;
 
-  st_type Metod = "SARSA";
-  st_type QP = "Q.txt", TrackP = "Track.txt", MeshHP = "MeshHistory.txt";
+  st_type Metod("SARSA");
+  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
   z_type s=4, a=3;
-  st_type NameMuscl = "Millard2012EquilibriumMuscle";
+  st_type NameMuscl("Millard2012EquilibriumMuscle");
   vector_tmpl<r_type> Time{0,0.1,1}; /*t0, dt, T*/
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dist_r_type(0.0, 1.0);
+  std::uniform_int_distribution<> dist_z_type(1, 5);
+  r_type r_Rand = dist_r_type(gen);
+  std::cout << "Random r_type is\n" << r_Rand << std::endl;
+  z_type z_Rand = dist_z_type(gen);
+  std::cout << "Random z_type is\n" << z_Rand << std::endl;
+
+  z_type f = 1;
+  auto Iter{m1.begin()};
+  Iter += f;
+  auto NewVec = *Iter;
+  auto MaxNewVec = *std::max_element(begin(NewVec),end(NewVec));
+  std::cout << NewVec << std::endl;
+  std::cout << "Max Elem from m1(2)\n" << MaxNewVec << std::endl;
+
+  z_type FindElem;
+  FindElem = *std::find(NewVec.begin(),NewVec.end(),MaxNewVec);
+  std::cout << "After find\n" << FindElem << std::endl;
 
   Learning test(Metod,Epsi,Alfi,Gamu);
   test.SetMesh(MeshSatate);
@@ -55,9 +76,6 @@ int main()
   test.SetModelSettings(a,NameMuscl);
   // test.SetMeshHistory(MeshSatate);
   // test.Run(100);
-
-  auto MinElem = *std::min_element(begin(v1),end(v1));
-  std::cout << MinElem << std::endl;
 
   test.RandomQ();
   test.GreedyPolicy(s);

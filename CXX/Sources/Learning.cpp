@@ -41,10 +41,17 @@ void Learning::SetTime(vector_type &TimeArr)
 
 void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
 {
-    st_type path = "../";
-    this->QPath = path + QP;
-    this->TrackPath = path + TrackP;
-    this->MeshHistoryPath = path + MeshHistoryP;
+    st_type DataPath = "../";
+    this->QPath = DataPath + QP;
+    this->TrackPath = DataPath + TrackP;
+    this->MeshHistoryPath = DataPath + MeshHistoryP;
+
+    // const char* DataPath_char = "../Data";
+    // mkdir(DataPath_char);
+    // st_type Path = "../";
+    // this->QPath = "Data" + QP;
+    // this->TrackPath = "Data" + TrackP;
+    // this->MeshHistoryPath = "Data" + MeshHistoryP;
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
@@ -80,8 +87,9 @@ void Learning::RandomQ()
 auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 {
     z_type Rez;
-    auto ActState_iter{this->Q.begin()};
-    ActState_iter += ActState;
+    auto Q_iter{this->Q.begin()};
+    Q_iter += ActState-1;
+    auto Q_vec = *Q_iter;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0.0, 1.0);
@@ -93,8 +101,8 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
     }
     else
     {
-        auto const Elem = *std::max_element(begin(this->Q[ActState]),end(this->Q[ActState]));
-        Rez = *std::find(this->Q[ActState].begin(),this->Q[ActState].end(),Elem);
+        auto Elem = *std::max_element(begin(Q_vec),end(Q_vec));
+        Rez = tls::FindIndex(Q_vec,Elem);
     }
     return Rez;
 }

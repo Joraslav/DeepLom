@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <cstdint>
@@ -10,6 +11,7 @@
 #include <algorithm>  //std::minmax_element
 #include <random>   //randomize
 #include <iterator>   //iterator
+#include <direct.h>   //making folder
 
 namespace tls
 {
@@ -49,8 +51,8 @@ namespace tls
   template<class T>
   auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type;
 
-  // template<class T>
-  // auto IntToIter(vector_tmpl<T> const& v, const z_type &it) -> vector_tmpl<T>::iterator;
+  template<class T>
+  auto FindIndex(vector_tmpl<T> const& v, const r_type &elem) -> z_type;
 }
 
 template<class T>
@@ -89,13 +91,21 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type
   return Rez;
 }
 
-// template<class T>
-// auto tls::IntToIter(vector_tmpl<T> const& v, const z_type &it) -> vector_tmpl<T>::iterator;
-// {
-//   auto iter{v.begin()};
-//   iter += it;
-//   return iter;
-// }
+template<class T>
+auto tls::FindIndex(vector_tmpl<T> const& v, const r_type &elem) -> z_type
+{
+  z_type Rez;
+  auto it = std::find(v.begin(),v.end(),elem);
+  if (it != v.end())
+  {
+    Rez = it - v.begin();
+  }
+  else
+  {
+    std::cout << "Can't find it" << std::endl;
+  }
+  return ++Rez;
+}
 
 template <class T>
 auto tls::operator+(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_tmpl<T>
