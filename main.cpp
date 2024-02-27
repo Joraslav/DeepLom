@@ -43,7 +43,8 @@ int main()
   st_type Metod = "SARSA";
   st_type QP = "Q.txt", TrackP = "Track.txt", MeshHP = "MeshHistory.txt";
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
-  z_type s=10, a=4;
+  z_type s=12, a=5;
+  st_type NameMuscl = "Millard2012EquilibriumMuscle";
   vector_tmpl<r_type> Time{0,0.1,1}; /*t0, dt, T*/
 
   Learning test(Metod,Epsi,Alfi,Gamu);
