@@ -7,7 +7,8 @@
 #include <fstream>
 #include <stdexcept> // std::invalid_argument
 #include <ranges> // std::views::iota
-#include <algorithm>
+#include <algorithm>  //std::minmax_element
+#include <ctime>   //srand
 
 namespace tls
 {
