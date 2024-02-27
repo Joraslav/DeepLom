@@ -43,7 +43,7 @@ int main()
   st_type Metod = "SARSA";
   st_type QP = "Q.txt", TrackP = "Track.txt", MeshHP = "MeshHistory.txt";
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
-  z_type s=12, a=5;
+  z_type s=4, a=3;
   st_type NameMuscl = "Millard2012EquilibriumMuscle";
   vector_tmpl<r_type> Time{0,0.1,1}; /*t0, dt, T*/
 
@@ -52,12 +52,16 @@ int main()
   test.SetTime(Time);
   test.SetPath(QP,TrackP,MeshHP);
   test.GenerateQ(s,a);
+  test.SetModelSettings(a,NameMuscl);
   // test.SetMeshHistory(MeshSatate);
-  test.GetQ();
-  test.Run(100);
+  // test.Run(100);
 
   auto MinElem = *std::min_element(begin(v1),end(v1));
   std::cout << MinElem << std::endl;
+
+  test.RandomQ();
+  test.GreedyPolicy(s);
+  test.GetQ();
 
   return 0;
 }

@@ -8,7 +8,7 @@
 #include <stdexcept> // std::invalid_argument
 #include <ranges> // std::views::iota
 #include <algorithm>  //std::minmax_element
-#include <ctime>   //srand
+#include <random>   //randomize
 
 namespace tls
 {
@@ -47,6 +47,9 @@ namespace tls
 
   template<class T>
   auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type;
+
+  // template<class T>
+  // auto IntToIter()
 }
 
 template<class T>

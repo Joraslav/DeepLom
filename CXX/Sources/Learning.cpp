@@ -56,9 +56,45 @@ void Learning::GenerateQ(z_type const &s, z_type const &a)
     }
 }
 
+
+
+void Learning::RandomQ()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(0.0, 1.0);
+    auto const nRows{this->Q.size()};
+    auto const nCols{this->Q.front().size()};
+
+    for (auto i{0u}; i < nRows; ++i)
+    {
+        for (auto j{0u}; j < nCols; ++j)
+        {
+            this->Q[i][j] = dist(gen);
+        }
+    }
+}
+
+
+
 auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 {
-    
+    z_type Rez;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(0.0, 1.0);
+
+    if (dist(gen) < this->Eps)
+    {
+        std::uniform_int_distribution<> dist(0, pow(2,this->Muscl.Num_Muscles));
+        Rez = dist(gen);
+    }
+    else
+    {
+        auto const Elem = *std::max_element(begin(this->Q[ActState]),end(this->Q[ActState]));
+        Rez = *std::find(this->Q[ActState].begin(),this->Q[ActState].end(),Elem);
+    }
+    return Rez;
 }
 
 void Learning::Run(z_type Episode)
