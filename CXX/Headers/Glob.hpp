@@ -9,6 +9,7 @@
 #include <ranges> // std::views::iota
 #include <algorithm>  //std::minmax_element
 #include <random>   //randomize
+#include <iterator>   //iterator
 
 namespace tls
 {
@@ -49,7 +50,7 @@ namespace tls
   auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type;
 
   // template<class T>
-  // auto IntToIter()
+  // auto IntToIter(vector_tmpl<T> const& v, const z_type &it) -> vector_tmpl<T>::iterator;
 }
 
 template<class T>
@@ -87,6 +88,14 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type
 
   return Rez;
 }
+
+// template<class T>
+// auto tls::IntToIter(vector_tmpl<T> const& v, const z_type &it) -> vector_tmpl<T>::iterator;
+// {
+//   auto iter{v.begin()};
+//   iter += it;
+//   return iter;
+// }
 
 template <class T>
 auto tls::operator+(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_tmpl<T>
@@ -128,7 +137,7 @@ auto tls::operator<<(std::ostream& out, matrix_tmpl<T> const& m) ->
 {
   for (auto const& i : m) {
     for (auto const& j : i) {
-      out << j << '\t';
+      out << j << '\t' << '\t';
     }
     out << '\n';
   }
@@ -140,7 +149,7 @@ auto tls::operator<<(std::ostream& out, vector_tmpl<T> const& v) -> std::ostream
 {
   for (auto const &i : v)
   {
-    out << i << '\t';
+    out << i << '\t' << '\t';
   }
   return out;
 }

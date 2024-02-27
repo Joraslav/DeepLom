@@ -80,6 +80,8 @@ void Learning::RandomQ()
 auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 {
     z_type Rez;
+    auto ActState_iter{this->Q.begin()};
+    ActState_iter += ActState;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0.0, 1.0);
