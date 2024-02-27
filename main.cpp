@@ -54,5 +54,9 @@ int main()
   // test.SetMeshHistory(MeshSatate);
   test.GetQ();
   test.Run(100);
+
+  auto MinElem = *std::min_element(begin(v1),end(v1));
+  std::cout << MinElem << std::endl;
+
   return 0;
 }

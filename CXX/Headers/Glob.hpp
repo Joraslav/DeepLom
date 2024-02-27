@@ -7,6 +7,7 @@
 #include <fstream>
 #include <stdexcept> // std::invalid_argument
 #include <ranges> // std::views::iota
+#include <algorithm>
 
 namespace tls
 {

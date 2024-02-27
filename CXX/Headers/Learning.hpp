@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Glob.hpp"
+#include "ModelSettings.hpp"
 #include <iostream>
 
 using namespace tls;
@@ -8,6 +9,7 @@ using namespace tls;
 class Learning
 {
 private:
+    ModelSettings Muscl;
     z_type State, Action;
     r_type Eps,Alf,Gam,t0,dt,Time;
     vector_type Mesh;
@@ -15,6 +17,7 @@ private:
     st_type Method, QPath, TrackPath, MeshHistoryPath;
 public:
     Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma);
+    void SetModelSettings(z_type &Num, st_type &NameModal);
     void SetMesh(vector_type &MeshState);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);

@@ -1,5 +1,6 @@
-#include "Learning.hpp"
 #include "Glob.hpp"
+#include "Learning.hpp"
+#include "ModelSettings.hpp"
 
 #include <iostream>
 
@@ -12,6 +13,12 @@ Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma)
     this->Alf = Alfa;
     this->Gam = Gamma;
 
+}
+
+void Learning::SetModelSettings(z_type &Num, st_type &NameModal)
+{
+    this->Muscl.Num_Muscles = Num;
+    this->Muscl.Modal_Muscl = NameModal;
 }
 
 void Learning::SetMesh(vector_type &MeshState)
@@ -47,6 +54,11 @@ void Learning::GenerateQ(z_type const &s, z_type const &a)
         this->Q[i].resize(a);
     }
 }
+
+// auto Learning::GreedyPolicy(z_type &ActState) -> z_type
+// {
+    
+// }
 
 void Learning::Run(z_type Episode)
 {
