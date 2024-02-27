@@ -41,9 +41,10 @@ void Learning::SetTime(vector_type &TimeArr)
 
 void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
 {
-    this->QPath = QP;
-    this->TrackPath = TrackP;
-    this->MeshHistoryPath = MeshHistoryP;
+    st_type path = "../";
+    this->QPath = path + QP;
+    this->TrackPath = path + TrackP;
+    this->MeshHistoryPath = path + MeshHistoryP;
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
@@ -55,10 +56,10 @@ void Learning::GenerateQ(z_type const &s, z_type const &a)
     }
 }
 
-// auto Learning::GreedyPolicy(z_type &ActState) -> z_type
-// {
+auto Learning::GreedyPolicy(z_type &ActState) -> z_type
+{
     
-// }
+}
 
 void Learning::Run(z_type Episode)
 {

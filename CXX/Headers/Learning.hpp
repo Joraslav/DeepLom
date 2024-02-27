@@ -22,6 +22,7 @@ public:
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
     void GenerateQ(z_type const &s, z_type const &a);
+    auto GreedyPolicy(z_type &ActState) -> z_type;
     void Run(z_type Episode);
     void GetQ();
     void GetState(r_type &Nu);
