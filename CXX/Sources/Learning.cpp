@@ -41,17 +41,11 @@ void Learning::SetTime(vector_type &TimeArr)
 
 void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
 {
-    st_type DataPath = "../";
-    this->QPath = DataPath + QP;
-    this->TrackPath = DataPath + TrackP;
-    this->MeshHistoryPath = DataPath + MeshHistoryP;
-
-    // const char* DataPath_char = "../Data";
-    // mkdir(DataPath_char);
-    // st_type Path = "../";
-    // this->QPath = "Data" + QP;
-    // this->TrackPath = "Data" + TrackP;
-    // this->MeshHistoryPath = "Data" + MeshHistoryP;
+    st_type DataPath = "../Data";
+    mkdir(DataPath.c_str());
+    this->QPath = DataPath + '/' + QP;
+    this->TrackPath = DataPath + '/' + TrackP;
+    this->MeshHistoryPath = DataPath + '/' + MeshHistoryP;
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
