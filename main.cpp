@@ -15,37 +15,26 @@ int main()
   matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
   matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
 
+  vector_type MeshSatate{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+
+  vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
+
+  #ifdef DEBUG_INFO
   std::cout << "m1:\n" << m1 << std::endl;
   std::cout << "m2:\n" << m2 << std::endl;
   std::cout << "m1 + m2:\n" << m1 + m2 << std::endl;
-
-  vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
 
   std::cout << "v1:\n" << v1 << std::endl;
   std::cout << "v2:\n" << v2 << std::endl;
   std::cout << "v1+v2:\n" << v1+v2 << std::endl;
 
-  vector_type MeshSatate{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
-
   r_type p=2.0;
   std::cout << "Norm v1\n" << Norm(v1,p) << std::endl;
-
   std::cout << "Sclar product of vector:\n" << v1*v2 << std::endl;
-
   std::cout << "Multiplication m3*m4:\n" << m4*m3 << std::endl;
-
   std::cout << "Mesh is\n" << MeshSatate << std::endl;
-
   std::cout << "Sign v1(1)\n" << sgn(v1[1]) << std::endl;
-
   std::cout << "Metric v1 and v2\n" << Metric(v1,v3) << std::endl;
-
-  st_type Metod("SARSA");
-  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
-  r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
-  vector_type SetTest{Epsi, Alfi, Gamu};
-  vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
-  z_type s=4, a=3;
 
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -66,6 +55,14 @@ int main()
   z_type FindElem;
   FindElem = *std::find(NewVec.begin(),NewVec.end(),MaxNewVec);
   std::cout << "After find\n" << FindElem << std::endl;
+  #endif   //DEBUG_INFO
+
+  st_type Metod("SARSA");
+  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
+  r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
+  vector_type SetTest{Epsi, Alfi, Gamu};
+  vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
+  z_type s=4, a=3;
 
   z_type NumMus = 100;
   st_type NameMus("Lalu");
@@ -85,31 +82,3 @@ int main()
 
   return 0;
 }
-
-// struct MuscSetting
-// {
-//   MuscSetting(int x, int y) : x_(x), y_(y) {}
-//   MuscSetting(MuscSetting const &other) : x_(other.x_), y_(other.y_)
-//   {
-//     other.~MuscSetting();
-//   }
-
-// private:
-//   int x_, y_;
-// };
-
-// struct Learning
-// {
-//   Learning(MuscSetting const &ms) : ms_(ms) {}
-
-// private:
-//   MuscSetting const &ms_;
-//   // std::shared_ptr<int> z; // std::unique_ptr
-// };
-
-// int main()
-// {
-//   MuscSetting ms(2, 3);
-//   Learning lr(ms);
-//   return 0;
-// }

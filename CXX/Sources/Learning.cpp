@@ -6,7 +6,10 @@
 
 Learning::Learning(vector_type const& Set, ModelSettings const &M) : Muscl(M)
 {
+    #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
+    #endif //DEBUG_CONSTRUCT_DISTRUCT
+
     this->Eps = Set[0];
     this->Alf = Set[1];
     this->Gam = Set[2];
@@ -14,7 +17,10 @@ Learning::Learning(vector_type const& Set, ModelSettings const &M) : Muscl(M)
 
 Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M) : Muscl(M)
 {
+    #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
+    #endif //DEBUG_CONSTRUCT_DISTRUCT
+
     this->Method = Met;
     this->Eps = Epsilon;
     this->Alf = Alfa;
@@ -147,7 +153,9 @@ void Learning::SetMeshHistory(vector_type &M)
 
 Learning::~Learning()
 {
+    #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Distructor of Learning\n" << this << std::endl;
+    #endif   //DEBUG_CONSTRUCT_DISTRUCT
 
     os_type QOut(this->QPath), TrackOut(this->TrackPath), MeshHOut{this->MeshHistoryPath};
     QOut << this->Q;
