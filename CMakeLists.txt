@@ -23,8 +23,8 @@ include_directories(${HDRS})
 
 add_library(LIB_Glob STATIC ${GLOB})
 add_library(LIB_Learning STATIC ${LEARNING})
-# add_library(LIB_GenerMass STATIC ${GENERMASS})
 add_library(LIB_ModelSettings STATIC ${MODELSETTINGS})
+# add_library(LIB_GenerMass STATIC ${GENERMASS})
 
 add_executable(${PROJECT_NAME} main.cpp)
 

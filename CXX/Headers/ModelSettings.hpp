@@ -10,8 +10,17 @@
 
 using namespace tls;
 
-struct ModelSettings
+class ModelSettings
 {
+private:
     z_type Num_Muscles;
-    st_type Modal_Muscl;
+    st_type Name_Model;
+public:
+    ModelSettings();
+    ModelSettings(z_type const& NumMuscles, st_type const& NameMuscles);
+    ModelSettings(ModelSettings const &other);
+    void SetNumMuscles(z_type const& NumMuscles);
+    void SetNameMuscles(st_type const& NameMuscles);
+    auto GetNumMuscles() const -> z_type;
+    ~ModelSettings();
 };

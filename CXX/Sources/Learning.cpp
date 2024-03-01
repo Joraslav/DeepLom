@@ -4,21 +4,21 @@
 
 #include <iostream>
 
-
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma)
+Learning::Learning(vector_type const& Set, ModelSettings const &M) : Muscl(M)
 {
-    std::cout << "Construct\n";
+    std::cout << "Construct of Learning\n" << this << std::endl;
+    this->Eps = Set[0];
+    this->Alf = Set[1];
+    this->Gam = Set[2];
+}
+
+Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M) : Muscl(M)
+{
+    std::cout << "Construct of Learning\n" << this << std::endl;
     this->Method = Met;
     this->Eps = Epsilon;
     this->Alf = Alfa;
     this->Gam = Gamma;
-
-}
-
-void Learning::SetModelSettings(z_type &Num, st_type &NameModal)
-{
-    this->Muscl.Num_Muscles = Num;
-    this->Muscl.Modal_Muscl = NameModal;
 }
 
 void Learning::SetMesh(vector_type &MeshState)
@@ -90,7 +90,7 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 
     if (dist(gen) < this->Eps)
     {
-        std::uniform_int_distribution<> dist(0, pow(2,this->Muscl.Num_Muscles));
+        std::uniform_int_distribution<> dist(0, pow(2,this->Muscl.GetNumMuscles()));
         Rez = dist(gen);
     }
     else
@@ -147,35 +147,10 @@ void Learning::SetMeshHistory(vector_type &M)
 
 Learning::~Learning()
 {
-    std::cout << "Distructor is Begin" << std::endl;
+    std::cout << "Distructor of Learning\n" << this << std::endl;
 
     os_type QOut(this->QPath), TrackOut(this->TrackPath), MeshHOut{this->MeshHistoryPath};
     QOut << this->Q;
     TrackOut << this->Track;
     MeshHOut << this->MeshHistory;
-
-    auto const QnRows{this->Q.size()};
-    // auto const nRows{this->Q.size()}, nCols{this->Q.front().size()};
-    for (auto i{0u}; i < QnRows; ++i)
-    {
-        this->Q[i].clear();
-    }
-    this->Q.clear();
-    QPath.clear();
-
-    auto const TracknRows{this->Track.size()};
-    for (auto i{0u}; i < TracknRows; ++i)
-    {
-        this->Track[i].clear();
-    }
-    this->Track.clear();
-    TrackPath.clear();
-
-    auto const MeshHistorynRows{this->MeshHistory.size()};
-    for (auto i{0u}; i < MeshHistorynRows; ++i)
-    {
-        this->MeshHistory[i].clear();
-    }
-    this->MeshHistory.clear();
-    MeshHistoryPath.clear();
 }

@@ -9,15 +9,15 @@ using namespace tls;
 class Learning
 {
 private:
-    ModelSettings Muscl;
+    ModelSettings const &Muscl;
     z_type State, Action;
     r_type Eps,Alf,Gam,t0,dt,Time;
     vector_type Mesh;
     matrix_type Q, Track, MeshHistory;
     st_type Method, QPath, TrackPath, MeshHistoryPath;
 public:
-    Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma);
-    void SetModelSettings(z_type &Num, st_type &NameModal);
+    Learning(vector_type const& Set, ModelSettings const &M);
+    Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M);
     void SetMesh(vector_type &MeshState);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
