@@ -5,6 +5,8 @@
 #include <iostream>
 
 using namespace tls;
+using vector_type = vector_tmpl<r_type>;
+using matrix_type = matrix_tmpl<r_type>;
 
 class Learning
 {

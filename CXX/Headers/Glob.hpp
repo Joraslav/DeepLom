@@ -21,8 +21,6 @@ namespace tls
   using os_type = std::ofstream;
   template<class T> using vector_tmpl = std::vector<T>;
   template<class T> using matrix_tmpl = vector_tmpl<vector_tmpl<T>>;
-  using vector_type = vector_tmpl<r_type>;
-  using matrix_type = matrix_tmpl<r_type>;
 
   template<class T>
   auto operator+(matrix_tmpl<T> const& left, matrix_tmpl<T> const& right) -> matrix_tmpl<T>;
