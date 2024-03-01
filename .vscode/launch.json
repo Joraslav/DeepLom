@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Xyu сборка и отладка активного файла",
+            "name": "DeepLom сборка и отладка активного файла",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
@@ -24,7 +24,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Xyu сборка активного файла"
+            "preLaunchTask": "DeepLom сборка активного файла"
         }
     ],
     "version": "2.0.0"
