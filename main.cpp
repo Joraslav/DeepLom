@@ -5,13 +5,13 @@
 
 #include "Glob.hpp"
 #include "Learning.hpp"
+ 
+using namespace tls;
+using vector_type = vector_tmpl<r_type>;
+using matrix_type = matrix_tmpl<r_type>;
 
 int main()
 {
-  using namespace tls;
-  // using vector_type = vector_tmpl<r_type>;
-  // using matrix_type = matrix_tmpl<r_type>;
-
   matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
   matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
 
