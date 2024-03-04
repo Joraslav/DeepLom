@@ -13,15 +13,15 @@ using matrix_type = matrix_tmpl<r_type>;
 
 int main()
 {
-  // matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
-  // matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
 
   vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
   r_type GP = -0.1;
 
-  // vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
+  matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
 
   #ifdef DEBUG_INFO
+  vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
+  matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
   std::cout << "m1:\n" << m1 << std::endl;
   std::cout << "m2:\n" << m2 << std::endl;
   std::cout << "m1 + m2:\n" << m1 + m2 << std::endl;
@@ -71,8 +71,8 @@ int main()
   MeshState.SetPath(SupMeshPath);
 
   st_type Metod("SARSA");
-  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
-  sup_st_type SupTestPath{QP,TrackP,MeshHP};
+  st_type QP("Q.txt"), TrackP("Track.txt");
+  sup_st_type SupTestPath{QP,TrackP};
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
   vector_type SetTest{Epsi, Alfi, Gamu};  /*Epsilon, Alfa, Gamma*/
   vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
@@ -81,6 +81,7 @@ int main()
   Learning test(SetTest, ModelTest, MeshState);
   test.SetTime(Time);
   test.SetPath(SupTestPath);
+  test.SetStart(m1);
   test.GenerateQ(s,pow(2,a));
 
   test.Run(2);

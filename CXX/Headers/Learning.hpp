@@ -27,6 +27,7 @@ public:
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
     void SetPath(sup_st_type &SupPh);
+    void SetStart(matrix_type const &Start);
     void GenerateQ(z_type const &s, z_type const &a);
 
     void RandomQ();
