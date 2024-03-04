@@ -54,6 +54,15 @@ void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
     this->MeshHistoryPath = DataPath + '/' + MeshHistoryP;
 }
 
+void Learning::SetPath(sup_st_type &SupPh)
+{
+    st_type DataPath = "../Data";
+    mkdir(DataPath.c_str());
+    this->QPath = DataPath + '/' + SupPh[0];
+    this->TrackPath = DataPath + '/' + SupPh[1];
+    this->MeshHistoryPath = DataPath + '/' + SupPh[2];
+}
+
 void Learning::GenerateQ(z_type const &s, z_type const &a)
 {
     this->Q.resize(s);

@@ -7,6 +7,7 @@
 using namespace tls;
 using vector_type = vector_tmpl<r_type>;
 using matrix_type = matrix_tmpl<r_type>;
+using sup_st_type = vector_tmpl<st_type>;
 
 class Learning
 {
@@ -16,6 +17,7 @@ private:
     r_type Eps,Alf,Gam,t0,dt,Time;
     vector_type Mesh;
     matrix_type Q, Track, MeshHistory;
+    sup_st_type Path;
     st_type Method, QPath, TrackPath, MeshHistoryPath;
 public:
     Learning(vector_type const& Set, ModelSettings const &M);
@@ -23,6 +25,7 @@ public:
     void SetMesh(vector_type &MeshState);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
+    void SetPath(sup_st_type &SupPh);
     void GenerateQ(z_type const &s, z_type const &a);
 
     void RandomQ();

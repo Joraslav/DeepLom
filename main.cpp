@@ -57,21 +57,24 @@ int main()
   std::cout << "After find\n" << FindElem << std::endl;
   #endif   //DEBUG_INFO
 
-  st_type Metod("SARSA");
-  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
-  r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
-  vector_type SetTest{Epsi, Alfi, Gamu};
-  vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
-  z_type s=4, a=3;
-
+  st_type ModelP{"ModelSettings.txt"};
   z_type NumMus = 100;
   st_type NameMus("Lalu");
   ModelSettings ModelTest(NumMus, NameMus);
+  ModelTest.SetPath(ModelP);
+
+  st_type Metod("SARSA");
+  st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
+  sup_st_type SPath{QP,TrackP,MeshHP};
+  r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
+  vector_type SetTest{Epsi, Alfi, Gamu};  /*Epsilon, Alfa, Gamma*/
+  vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
+  z_type s=4, a=3;
 
   Learning test(SetTest, ModelTest);
-  test.SetMesh(MeshSatate);
   test.SetTime(Time);
-  test.SetPath(QP,TrackP,MeshHP);
+  test.SetMesh(MeshSatate);
+  test.SetPath(SPath);
   test.GenerateQ(s,a);
 
   // // test.Run(100);
