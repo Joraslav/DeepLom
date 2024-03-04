@@ -2,12 +2,6 @@
 
 #include "Glob.hpp"
 
-#include <cmath>
-#include <vector>
-#include <cstdint>
-#include <string>
-#include <fstream>
-
 using namespace tls;
 using vector_type = vector_tmpl<r_type>;
 using matrix_type = matrix_tmpl<r_type>;

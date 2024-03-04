@@ -5,6 +5,7 @@
 
 #include "Glob.hpp"
 #include "Learning.hpp"
+#include "Mesh.hpp"
  
 using namespace tls;
 using vector_type = vector_tmpl<r_type>;
@@ -12,12 +13,13 @@ using matrix_type = matrix_tmpl<r_type>;
 
 int main()
 {
-  matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
-  matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
+  // matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
+  // matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
 
-  vector_type MeshSatate{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+  vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+  r_type GP = -0.1;
 
-  vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
+  // vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
 
   #ifdef DEBUG_INFO
   std::cout << "m1:\n" << m1 << std::endl;
@@ -58,30 +60,34 @@ int main()
   #endif   //DEBUG_INFO
 
   st_type ModelP{"ModelSettings.txt"};
-  z_type NumMus = 100;
+  z_type NumMus = 2;
   st_type NameMus("Lalu");
   ModelSettings ModelTest(NumMus, NameMus);
   ModelTest.SetPath(ModelP);
 
+  st_type ActMesh{"ActMesh.txt"}, StateCount{"StateCount.txt"}, MeshHistiry{"MeshHistory.txt"};
+  sup_st_type SupMeshPath{ActMesh,StateCount,MeshHistiry};  /*Mesh, Count, History*/
+  Mesh MeshState(MeshSt,GP);
+  MeshState.SetPath(SupMeshPath);
+
   st_type Metod("SARSA");
   st_type QP("Q.txt"), TrackP("Track.txt"), MeshHP("MeshHistory.txt");
-  sup_st_type SPath{QP,TrackP,MeshHP};
+  sup_st_type SupTestPath{QP,TrackP,MeshHP};
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
   vector_type SetTest{Epsi, Alfi, Gamu};  /*Epsilon, Alfa, Gamma*/
   vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
-  z_type s=4, a=3;
+  z_type s=4, a=NumMus;
 
-  Learning test(SetTest, ModelTest);
+  Learning test(SetTest, ModelTest, MeshState);
   test.SetTime(Time);
-  test.SetMesh(MeshSatate);
-  test.SetPath(SPath);
-  test.GenerateQ(s,a);
+  test.SetPath(SupTestPath);
+  test.GenerateQ(s,pow(2,a));
 
-  // // test.Run(100);
+  test.Run(2);
 
   test.RandomQ();
-  test.GreedyPolicy(s);
   test.GetQ();
+  test.GreedyPolicy(s);
 
   return 0;
 }

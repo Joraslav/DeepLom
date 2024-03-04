@@ -1,10 +1,11 @@
 #include "Glob.hpp"
 #include "Learning.hpp"
 #include "ModelSettings.hpp"
+#include "Mesh.hpp"
 
 #include <iostream>
 
-Learning::Learning(vector_type const& Set, ModelSettings const &M) : Muscl(M)
+Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh const &AM) : Muscl(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -15,7 +16,7 @@ Learning::Learning(vector_type const& Set, ModelSettings const &M) : Muscl(M)
     this->Gam = Set[2];
 }
 
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M) : Muscl(M)
+Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh const &AM) : Muscl(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -27,16 +28,16 @@ Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Mo
     this->Gam = Gamma;
 }
 
-void Learning::SetMesh(vector_type &MeshState)
-{
-    auto const nCols{MeshState.size()};
-    this->Mesh.resize(nCols);
+// void Learning::SetMesh(vector_type &MeshState)
+// {
+//     auto const nCols{MeshState.size()};
+//     this->Mesh.resize(nCols);
 
-    for (auto i{0u}; i < nCols; ++i)
-    {
-        this->Mesh[i] = MeshState[i];
-    }
-}
+//     for (auto i{0u}; i < nCols; ++i)
+//     {
+//         this->Mesh[i] = MeshState[i];
+//     }
+// }
 
 void Learning::SetTime(vector_type &TimeArr)
 {
@@ -51,7 +52,7 @@ void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + QP;
     this->TrackPath = DataPath + '/' + TrackP;
-    this->MeshHistoryPath = DataPath + '/' + MeshHistoryP;
+    // this->MeshHistoryPath = DataPath + '/' + MeshHistoryP;
 }
 
 void Learning::SetPath(sup_st_type &SupPh)
@@ -60,7 +61,7 @@ void Learning::SetPath(sup_st_type &SupPh)
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + SupPh[0];
     this->TrackPath = DataPath + '/' + SupPh[1];
-    this->MeshHistoryPath = DataPath + '/' + SupPh[2];
+    // this->MeshHistoryPath = DataPath + '/' + SupPh[2];
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
@@ -118,13 +119,14 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 
 void Learning::Run(z_type Episode)
 {
-    z_type Epoch = 1;
+    z_type Epoch{0};
     std::cout << "Begin\n" << std::endl;
     while (Epoch != Episode)
     {
+        this->MeshState = ActMesh.GetMesh();
         if (Epoch%50==0)
         {
-            std::cout << "Epoch  =\t" << Epoch << std::endl;
+            std::cout << "Epoch =\t" << Epoch << std::endl;
         }
         for (r_type h = this->t0; h < Time; h=h+dt)
         {
@@ -142,22 +144,16 @@ void Learning::GetQ()
 
 void Learning::GetState(r_type &Nu)
 {
-    auto const nCols{this->Mesh.size()};
+    auto const nCols{this->MeshState.size()};
 
     for (auto i{0u}; i < nCols; i++)
     {
-        if (Nu>=Mesh[i] && Nu<Mesh[i+1])
+        if (Nu>=MeshState[i] && Nu<MeshState[i+1])
         {
             this->State = ++i;
             break;
         }
     }
-}
-
-void Learning::SetMeshHistory(vector_type &M)
-{
-    auto LastIndex{this->MeshHistory.size()};
-    this->MeshHistory[LastIndex].assign(M.begin(),M.end());
 }
 
 Learning::~Learning()
@@ -166,8 +162,7 @@ Learning::~Learning()
     std::cout << "Distructor of Learning\n" << this << std::endl;
     #endif   //DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type QOut(this->QPath), TrackOut(this->TrackPath), MeshHOut{this->MeshHistoryPath};
+    os_type QOut(this->QPath), TrackOut(this->TrackPath);
     QOut << this->Q;
     TrackOut << this->Track;
-    MeshHOut << this->MeshHistory;
 }

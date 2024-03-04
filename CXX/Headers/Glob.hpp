@@ -14,7 +14,7 @@
 #include <direct.h>   //making folder
 
 // #define DEBUG_INFO
-// #define DEBUG_CONSTRUCT_DISTRUCT
+#define DEBUG_CONSTRUCT_DISTRUCT
 
 namespace tls
 {
@@ -52,8 +52,8 @@ namespace tls
   template<class T>
   auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type;
 
-  template<class T>
-  auto FindIndex(vector_tmpl<T> const& v, const r_type &elem) -> z_type;
+  template<class T, class U>
+  auto FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type;
 }
 
 template<class T>
@@ -92,8 +92,8 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type
   return Rez;
 }
 
-template<class T>
-auto tls::FindIndex(vector_tmpl<T> const& v, const r_type &elem) -> z_type
+template<class T, class U>
+auto tls::FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type
 {
   z_type Rez;
   auto it = std::find(v.begin(),v.end(),elem);
