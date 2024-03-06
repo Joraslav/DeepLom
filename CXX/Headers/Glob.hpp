@@ -103,7 +103,7 @@ auto tls::FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type
   }
   else
   {
-    std::cout << "Can't find it" << std::endl;
+    std::cout << "Can't find index" << std::endl;
   }
   return ++Rez;
 }

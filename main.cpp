@@ -34,7 +34,6 @@ int main()
   std::cout << "Norm v1\n" << Norm(v1,p) << std::endl;
   std::cout << "Sclar product of vector:\n" << v1*v2 << std::endl;
   std::cout << "Multiplication m3*m4:\n" << m4*m3 << std::endl;
-  std::cout << "Mesh is\n" << MeshSatate << std::endl;
   std::cout << "Sign v1(1)\n" << sgn(v1[1]) << std::endl;
   std::cout << "Metric v1 and v2\n" << Metric(v1,v3) << std::endl;
 
@@ -57,6 +56,8 @@ int main()
   z_type FindElem;
   FindElem = *std::find(NewVec.begin(),NewVec.end(),MaxNewVec);
   std::cout << "After find\n" << FindElem << std::endl;
+
+  r_type Nu = Metric(v1,v2);
   #endif   //DEBUG_INFO
 
   st_type ModelP{"ModelSettings.txt"};
@@ -83,12 +84,6 @@ int main()
   test.SetPath(SupTestPath);
   test.SetStart(m1);
   test.GenerateQ(s,pow(2,a));
-
-  test.Run(2);
-
-  test.RandomQ();
-  test.GetQ();
-  test.GreedyPolicy(s);
 
   return 0;
 }

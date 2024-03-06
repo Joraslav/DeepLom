@@ -6,7 +6,7 @@
 #include <iostream>
 #include <iterator>
 
-Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh const &AM) : Muscl(M), ActMesh(AM)
+Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh &AM) : Muscl(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -17,7 +17,7 @@ Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh const &A
     this->Gam = Set[2];
 }
 
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh const &AM) : Muscl(M), ActMesh(AM)
+Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh &AM) : Muscl(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -73,8 +73,6 @@ void Learning::GenerateQ(z_type const &s, z_type const &a)
         this->Q[i].resize(a);
     }
 }
-
-
 
 void Learning::RandomQ()
 {
@@ -154,6 +152,7 @@ void Learning::GetState(r_type &Nu)
         if (Nu>=MeshState[i] && Nu<MeshState[i+1])
         {
             this->State = ++i;
+            this->ActMesh.SetCount(--State);
             break;
         }
     }

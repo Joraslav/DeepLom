@@ -20,7 +20,10 @@ public:
     Mesh(Mesh const &other);
     void SetPath(st_type &AP, st_type &SCP, st_type &MHP);
     void SetPath(sup_st_type &SupPh);
+    void SetCount(z_type const &St);
+
     auto GetMesh() const -> vector_type;
+    auto GetGoal() const -> z_type;
 
     // friend os_type& operator<<(os_type& os, const Mesh& M);
 

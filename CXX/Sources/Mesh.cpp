@@ -25,6 +25,7 @@ Mesh::Mesh(vector_type const& M, z_type const& G)
     this->MeshHistory[0].assign(M.begin(),M.end());
 
     this->Goal = tls::FindIndex(this->ActMesh,G);
+    this->StateCount.resize(this->ActMesh.size()-1);
 }
 
 Mesh::Mesh(Mesh const &other)
@@ -60,9 +61,19 @@ void Mesh::SetPath(sup_st_type &SupPh)
     this->MHistPath = DataPath + '/' + SupPh[2];
 }
 
+void Mesh::SetCount(z_type const &St)
+{
+    this->StateCount[St]++;
+}
+
 auto Mesh::GetMesh() const -> vector_type
 {
     return this->ActMesh;
+}
+
+auto Mesh::GetGoal() const -> z_type
+{
+    return this->Goal;
 }
 
 // os_type& operator<<(os_type& os, const Mesh& M)
