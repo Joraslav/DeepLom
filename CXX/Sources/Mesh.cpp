@@ -76,10 +76,39 @@ auto Mesh::GetGoal() const -> z_type
     return this->Goal;
 }
 
-// os_type& operator<<(os_type& os, const Mesh& M)
-// {
+#ifdef ADAPTIVE
+auto Mesh::Adaptive(matrix_type &QL, z_type const Param) -> matrix_type
+{
+    z_type Removed{0}, k{0};  //k=1
+    auto LengthStCount = this->StateCount.size();
 
-// }
+    while (k != LengthStCount-1)   //k!=n
+    {
+        if ((k!=Goal-Removed) && (k!=Goal-Removed+1) && (k!=Goal-Removed-1))
+        {
+            if (this->StateCount[k]==0)
+            {
+                ActMesh[k+1] = (ActMesh[k]+ActMesh[k+1])/2;
+                auto k_iter{ActMesh.begin()+k};
+                ActMesh.erase(k_iter);
+                QL[k].clear();
+                Removed++;
+                this->StateCount.erase(k_iter);
+                k--;
+            }
+        }
+        k++;
+        LengthStCount = this->StateCount.size();
+    }
+    
+    k = 0;  //k=1
+    if (StateCount[k] >= Param*Sum(StateCount))
+    {
+        ActMesh.insert(ActMesh.begin()+k+1,3*ActMesh[k+1]);
+    }
+    
+}
+#endif //ADAPTIVE
 
 Mesh::~Mesh()
 {

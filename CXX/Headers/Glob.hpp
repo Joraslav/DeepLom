@@ -54,6 +54,9 @@ namespace tls
 
   template<class T, class U>
   auto FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type;
+
+  template<class T>
+  auto Sum(vector_tmpl<T> const &v) -> T;
 }
 
 template<class T>
@@ -106,6 +109,20 @@ auto tls::FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type
     std::cout << "Can't find index" << std::endl;
   }
   return ++Rez;
+}
+
+template<class T>
+auto tls::Sum(vector_tmpl<T> const &v) -> T
+{
+  T Rez;
+  auto const nCols{v.size()};
+
+  for (auto i{0u}; i < nCols; ++i)
+  {
+    Rez += v[i];
+  }
+
+  return Rez;  
 }
 
 template <class T>

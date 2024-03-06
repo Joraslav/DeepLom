@@ -2,6 +2,8 @@
 
 #include "Glob.hpp"
 
+// #define ADAPTIVE
+
 using namespace tls;
 using vector_type = vector_tmpl<r_type>;
 using matrix_type = matrix_tmpl<r_type>;
@@ -25,7 +27,9 @@ public:
     auto GetMesh() const -> vector_type;
     auto GetGoal() const -> z_type;
 
-    // friend os_type& operator<<(os_type& os, const Mesh& M);
+    #ifdef ADAPTIVE
+    auto Adaptive(matrix_type &QL, z_type const Param) -> matrix_type;
+    #endif //ADAPTIVE
 
     ~Mesh();
 };
