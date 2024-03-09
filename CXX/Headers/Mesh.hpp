@@ -2,7 +2,7 @@
 
 #include "Glob.hpp"
 
-// #define ADAPTIVE
+#define ADAPTIVE
 
 using namespace tls;
 using vector_type = vector_tmpl<r_type>;

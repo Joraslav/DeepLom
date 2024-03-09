@@ -84,6 +84,8 @@ int main()
   test.SetPath(SupTestPath);
   test.SetStart(m1);
   test.GenerateQ(s,pow(2,a));
+  test.RandomQ();
+  test.Run(2);
 
   return 0;
 }

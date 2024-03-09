@@ -13,11 +13,12 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
-// #define DEBUG_INFO
-// #define DEBUG_CONSTRUCT_DISTRUCT
+#define DEBUG_INFO
+#define DEBUG_CONSTRUCT_DISTRUCT
 
 namespace tls
 {
+  using sz_type = std::size_t;
   using z_type = int;
   using r_type = double;
   using st_type = std::string;

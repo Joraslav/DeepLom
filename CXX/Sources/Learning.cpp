@@ -133,6 +133,9 @@ void Learning::Run(z_type Episode)
             std::cout << "Check " << h << std::endl;
 
         }
+
+        this->Q = ActMesh.Adaptive(this->Q,0.3);
+
         Epoch++;
     }
         
