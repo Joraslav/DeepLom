@@ -13,8 +13,8 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
-#define DEBUG_INFO
-#define DEBUG_CONSTRUCT_DISTRUCT
+// #define DEBUG_INFO
+// #define DEBUG_CONSTRUCT_DISTRUCT
 
 namespace tls
 {

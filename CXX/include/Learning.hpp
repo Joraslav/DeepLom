@@ -23,7 +23,6 @@ private:
 public:
     Learning(vector_type const& Set, ModelSettings const &M, Mesh &AM);
     Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh &AM);
-    // void SetMesh(vector_type &MeshState);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
     void SetPath(sup_st_type &SupPh);
