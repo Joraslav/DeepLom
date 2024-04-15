@@ -21,7 +21,7 @@ set(MODELSETTINGS ${HDRS_CXX}/ModelSettings.hpp ${SRCS_CXX}/ModelSettings.cpp)
 set(MESH ${HDRS_CXX}/Mesh.hpp ${SRCS_CXX}/Mesh.cpp)
 # file(GLOB GENERMASS "${HEADMat}/*.cpp" "${HEADMat}/*.h")
 
-include_directories(${HDRS} ${OpenNN_DIR})
+include_directories(${HDRS_CXX} ${OpenNN_DIR})
 # include_directories(${HDRS} ${HEADMat})
 
 add_library(LIB_Glob STATIC ${GLOB})
