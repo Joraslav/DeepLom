@@ -14,12 +14,12 @@ using matrix_type = matrix_tmpl<r_type>;
 int main()
 {
 
+
+  #ifdef DEBUG_INFO
   vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
   r_type GP = -0.1;
 
   matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
-
-  #ifdef DEBUG_INFO
   vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
   matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
   cout << "m1:\n" << m1 << endl;
@@ -65,32 +65,24 @@ int main()
   #endif   //DEBUG_INFO
 
   #ifdef DEBUG_CLASSES
-  st_type ModelP{"ModelSettings.txt"};
-  z_type NumMus = 2;
-  st_type NameMus("Lalu");
-  ModelSettings ModelTest(NumMus, NameMus);
-  ModelTest.SetPath(ModelP);
+  st_type ModelPath{"ModelSettings.txt"};
+  z_type a{3};
+  st_type ModelName{"Car.txt"};
+  ModelSettings Model(a,ModelName);
 
   st_type ActMesh{"ActMesh.txt"}, StateCount{"StateCount.txt"}, MeshHistiry{"MeshHistory.txt"};
-  sup_st_type SupMeshPath{ActMesh,StateCount,MeshHistiry};  /*Mesh, Count, History*/
-  Mesh MeshState(MeshSt,GP);
-  MeshState.SetPath(SupMeshPath);
+  sup_st_type SupMeshPath{ActMesh,StateCount,MeshHistiry};    /*Mesh, Count, History*/
+  Mesh Mesh;
+  Mesh.SetPath(SupMeshPath);
 
-  st_type Metod("SARSA");
   st_type QP("Q.txt"), TrackP("Track.txt");
-  sup_st_type SupTestPath{QP,TrackP};
+  sup_st_type SupTestPath{QP,TrackP};   /*Q, Track*/
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
-  vector_type SetTest{Epsi, Alfi, Gamu};  /*Epsilon, Alfa, Gamma*/
-  vector_type Time{0, 0.1, 1}; /*t0, dt, T*/
-  z_type s=4, a=NumMus;
-
-  Learning test(SetTest, ModelTest, MeshState);
-  test.SetTime(Time);
+  vector_type Settings{Epsi, Alfi, Gamu};   /*Epsilon, Alfa, Gamma*/
+  vector_type Time{0, 0.1, 1};    /*t0, dt, T*/
+  Learning test(Settings, Model, Mesh);
   test.SetPath(SupTestPath);
-  test.SetStart(m1);
-  test.GenerateQ(s,pow(2,a));
-  test.RandomQ();
-  test.Run(2);
+  test.SetTime(Time);
   #endif  //DEBUG_CLASSES
 
   return 0;

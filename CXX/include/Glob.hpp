@@ -13,9 +13,9 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
-#define DEBUG_INFO
-// #define DEBUG_CONSTRUCT_DISTRUCT
-// #define DEBUG_CLASSES
+// #define DEBUG_INFO
+#define DEBUG_CONSTRUCT_DISTRUCT
+#define DEBUG_CLASSES
 
 namespace tls
 {

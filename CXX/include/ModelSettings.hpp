@@ -10,11 +10,11 @@ class ModelSettings
 {
 private:
     st_type DataPath;
-    z_type Num_Muscles;
+    z_type Num_Action;
     st_type Name_Model;
 public:
     ModelSettings();
-    ModelSettings(z_type const& NumMuscles, st_type const& NameMuscles);
+    ModelSettings(z_type const& NumAction, st_type const& Name);
     ModelSettings(ModelSettings const &other);
     void SetPath(st_type &DP);
     void SetNumMuscles(z_type const& NumMuscles);

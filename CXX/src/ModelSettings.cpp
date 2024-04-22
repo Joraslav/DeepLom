@@ -6,18 +6,18 @@ ModelSettings::ModelSettings()
     std::cout << "Construct of Model\n" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    this->Num_Muscles = 0;
+    this->Num_Action = 0;
     this->Name_Model = "Default";
 }
 
-ModelSettings::ModelSettings(z_type const& NumMuscles, st_type const& NameMuscles)
+ModelSettings::ModelSettings(z_type const& NumAction, st_type const& Name)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\n" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    SetNumMuscles(NumMuscles);
-    SetNameMuscles(NameMuscles);
+    SetNumMuscles(NumAction);
+    SetNameMuscles(Name);
 }
 
 ModelSettings::ModelSettings(ModelSettings const &other)
@@ -26,7 +26,7 @@ ModelSettings::ModelSettings(ModelSettings const &other)
     std::cout << "Coping to " << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    this->Num_Muscles = other.Num_Muscles;
+    this->Num_Action = other.Num_Action;
     this->Name_Model = other.Name_Model;
     this->DataPath = other.DataPath;
 }
@@ -38,25 +38,25 @@ void ModelSettings::SetPath(st_type &DP)
     this->DataPath = DataPath + '/' + DP;
 }
 
-void ModelSettings::SetNumMuscles(z_type const& NumMuscles)
+void ModelSettings::SetNumMuscles(z_type const& NumAction)
 {
-    this->Num_Muscles = NumMuscles;
+    this->Num_Action = NumAction;
 }
 
-void ModelSettings::SetNameMuscles(st_type const& NameMuscles)
+void ModelSettings::SetNameMuscles(st_type const& Name)
 {
-    this->Name_Model = NameMuscles;
+    this->Name_Model = Name;
 }
 
 auto ModelSettings::GetNumMuscles() const -> z_type
 {
-    return this->Num_Muscles;
+    return this->Num_Action;
 }
 
 os_type& operator<<(os_type& os, const ModelSettings& M)
 {
     os << "Name of Muscles Model\t" << M.Name_Model << std::endl;
-    os << "Number of Muscles\t" << M.Num_Muscles << std::endl;
+    os << "Number of Muscles\t" << M.Num_Action << std::endl;
     return os;
 }
 

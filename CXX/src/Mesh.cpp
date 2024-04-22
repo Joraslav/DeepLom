@@ -24,7 +24,7 @@ Mesh::Mesh(vector_type const& M, z_type const& G)
     this->MeshHistory.resize(M.size());
     this->MeshHistory[0].assign(M.begin(),M.end());
 
-    this->Goal = tls::FindIndex(this->ActMesh,G);
+    this->Goal = FindIndex(this->ActMesh,G);
     this->StateCount.resize(this->ActMesh.size()-1);
 }
 
