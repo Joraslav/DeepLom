@@ -13,15 +13,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++23")
 set(HDRS_CXX CXX/include)
 set(SRCS_CXX CXX/src)
 
-set(OpenNN_DIR C:/Lib/OpenNN/opennn)
-
 set(GLOB ${HDRS_CXX}/Glob.hpp ${SRCS_CXX}/Glob.cpp)
 set(LEARNING ${HDRS_CXX}/Learning.hpp ${SRCS_CXX}/Learning.cpp)
 set(MODELSETTINGS ${HDRS_CXX}/ModelSettings.hpp ${SRCS_CXX}/ModelSettings.cpp)
 set(MESH ${HDRS_CXX}/Mesh.hpp ${SRCS_CXX}/Mesh.cpp)
 # file(GLOB GENERMASS "${HEADMat}/*.cpp" "${HEADMat}/*.h")
 
-include_directories(${HDRS_CXX} ${OpenNN_DIR})
+include_directories(${HDRS_CXX})
 # include_directories(${HDRS} ${HEADMat})
 
 add_library(LIB_Glob STATIC ${GLOB})

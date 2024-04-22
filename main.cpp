@@ -22,42 +22,46 @@ int main()
   #ifdef DEBUG_INFO
   vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
   matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
-  std::cout << "m1:\n" << m1 << std::endl;
-  std::cout << "m2:\n" << m2 << std::endl;
-  std::cout << "m1 + m2:\n" << m1 + m2 << std::endl;
+  cout << "m1:\n" << m1 << endl;
+  cout << "m2:\n" << m2 << endl;
+  cout << "m1 + m2:\n" << m1 + m2 << endl;
 
-  std::cout << "v1:\n" << v1 << std::endl;
-  std::cout << "v2:\n" << v2 << std::endl;
-  std::cout << "v1+v2:\n" << v1+v2 << std::endl;
+  cout << "v1:\n" << v1 << std::endl;
+  cout << "v2:\n" << v2 << std::endl;
+  cout << "v1+v2:\n" << v1+v2 << std::endl;
 
-  r_type p=2.0;
-  std::cout << "Norm v1\n" << Norm(v1,p) << std::endl;
-  std::cout << "Sclar product of vector:\n" << v1*v2 << std::endl;
-  std::cout << "Multiplication m3*m4:\n" << m4*m3 << std::endl;
-  std::cout << "Sign v1(1)\n" << sgn(v1[1]) << std::endl;
-  std::cout << "Metric v1 and v2\n" << Metric(v1,v3) << std::endl;
+  cout << "Norm v1\n" << Norm(v1) << endl;
+  cout << "Sclar product of vector:\n" << v1*v2 << endl;
+  cout << "Multiplication m3*m4:\n" << m4*m3 << endl;
+  cout << "Sign v1(1)\n" << sgn(v1[1]) << endl;
+  cout << "Metric v1 and v3\n" << Metric(v1,v3) << endl;
 
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dist_r_type(0.0, 1.0);
-  std::uniform_int_distribution<> dist_z_type(1, 5);
+  random_device rd;
+  mt19937 gen(rd());
+  uniform_real_distribution<> dist_r_type(0.0, 1.0);
+  uniform_int_distribution<> dist_z_type(1, 5);
   r_type r_Rand = dist_r_type(gen);
-  std::cout << "Random r_type is\n" << r_Rand << std::endl;
+  cout << "Random r_type is\n" << r_Rand << endl;
   z_type z_Rand = dist_z_type(gen);
-  std::cout << "Random z_type is\n" << z_Rand << std::endl;
+  cout << "Random z_type is\n" << z_Rand << endl;
 
   auto Iter{m1.begin()};
   ++Iter;
   auto NewVec = *Iter;
-  auto MaxNewVec = *std::max_element(begin(NewVec),end(NewVec));
-  std::cout << NewVec << std::endl;
-  std::cout << "Max Elem from m1(2)\n" << MaxNewVec << std::endl;
+  auto MaxNewVec = *max_element(begin(NewVec),end(NewVec));
+  cout << NewVec << endl;
+  cout << "Max Elem from m1(2)\n" << MaxNewVec << endl;
 
   z_type FindElem;
-  FindElem = *std::find(NewVec.begin(),NewVec.end(),MaxNewVec);
-  std::cout << "After find\n" << FindElem << std::endl;
+  FindElem = *find(NewVec.begin(),NewVec.end(),MaxNewVec);
+  cout << "After find\n" << FindElem << endl;
 
   r_type Nu = Metric(v1,v2);
+  cout << "Metric on v1 and v2 is " << Nu << endl;
+
+  r_type p{2.};
+  matrix_type m5{p*m4};
+  std::cout << "p*m4 is " << '\n' << m5 << std::endl;
   #endif   //DEBUG_INFO
 
   #ifdef DEBUG_CLASSES
