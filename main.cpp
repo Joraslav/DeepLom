@@ -60,6 +60,7 @@ int main()
   r_type Nu = Metric(v1,v2);
   #endif   //DEBUG_INFO
 
+  #ifdef DEBUG_CLASSES
   st_type ModelP{"ModelSettings.txt"};
   z_type NumMus = 2;
   st_type NameMus("Lalu");
@@ -86,6 +87,7 @@ int main()
   test.GenerateQ(s,pow(2,a));
   test.RandomQ();
   test.Run(2);
+  #endif  //DEBUG_CLASSES
 
   return 0;
 }

@@ -13,8 +13,9 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
-// #define DEBUG_INFO
+#define DEBUG_INFO
 // #define DEBUG_CONSTRUCT_DISTRUCT
+// #define DEBUG_CLASSES
 
 namespace tls
 {
@@ -52,6 +53,9 @@ namespace tls
 
   template<class T>
   auto operator*(T const& c, vector_tmpl<T> const& v) -> vector_tmpl<T>;
+
+  template<class T>
+  auto operator*(T const& c, matrix_tmpl<T> const& m) -> matrix_tmpl<T>;
 
   template <class T>
   auto sgn(T v) -> T;
@@ -209,7 +213,7 @@ auto tls::operator<<(std::ostream& out, matrix_tmpl<T> const& m) ->
 {
   for (auto const& i : m) {
     for (auto const& j : i) {
-      out << j << '\t' << '\t';
+      out << j << '\t';
     }
     out << '\n';
   }
@@ -221,7 +225,7 @@ auto tls::operator<<(std::ostream& out, vector_tmpl<T> const& v) -> std::ostream
 {
   for (auto const &i : v)
   {
-    out << i << '\t' << '\t';
+    out << i << '\t';
   }
   return out;
 }
@@ -280,4 +284,16 @@ auto tls::operator*(T const& c, vector_tmpl<T> const& v) -> vector_tmpl<T>
 		Rez[i] = c*Rez[i];
 	}
 	return Rez;
+}
+
+template<class T>
+auto tls::operator*(T const& c, matrix_tmpl<T> const& m) -> matrix_tmpl<T>
+{
+  matrix_tmpl<T> Rez{m};
+  auto const nRows{m.size()};
+  for (auto i{0u}; i < nRows; ++i)
+  {
+    
+  }
+  
 }
