@@ -27,10 +27,16 @@ namespace tls
   template<class T> using matrix_tmpl = vector_tmpl<vector_tmpl<T>>;
 
   template<class T>
-  auto operator+(matrix_tmpl<T> const& left, matrix_tmpl<T> const& right) -> matrix_tmpl<T>;
+  auto operator+(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_tmpl<T>;
+
+  template<class T>
+  auto operator-(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_tmpl<T>;
 
   template<class T>
   auto operator+(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> vector_tmpl<T>;
+
+  template<class T>
+  auto operator-(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> vector_tmpl<T>;
 
   template<class T>
   auto operator<<(std::ostream& out, matrix_tmpl<T> const& m) -> std::ostream&;
@@ -43,6 +49,9 @@ namespace tls
 
   template<class T>
   auto operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> r_type;
+
+  template<class T>
+  auto operator*(T const& c, vector_tmpl<T> const& v) -> vector_tmpl<T>;
 
   template <class T>
   auto sgn(T v) -> T;
@@ -145,6 +154,24 @@ auto tls::operator+(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_
 }
 
 template <class T>
+auto tls::operator-(matrix_tmpl<T> const& l, matrix_tmpl<T> const& r) -> matrix_tmpl<T>
+{
+    if (l.size() != r.size()) { throw std::invalid_argument("wrong sizes"); }  //Проверка размерности
+
+    auto m{l};
+    auto const nRows{m.size()}, nCols{m.front().size()};
+
+  for (auto i{0u}; i < nRows; ++i)
+  {
+    for (auto j{0u}; j < nCols; ++j)
+    {
+      m[i][j] -= r[i][j];
+    }
+  }
+  return m;
+}
+
+template <class T>
 auto tls::operator+(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> vector_tmpl<T>
 {
   if (l.size() != r.size()){throw std::invalid_argument("wrong sizes");}  //Проверка размерности
@@ -155,6 +182,22 @@ auto tls::operator+(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> vector_
   for (auto i{0u}; i < nRows; ++i)
   {
     Rez[i] += r[i];
+  }
+  
+  return Rez;
+}
+
+template <class T>
+auto tls::operator-(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> vector_tmpl<T>
+{
+  if (l.size() != r.size()){throw std::invalid_argument("wrong sizes");}  //Проверка размерности
+
+  auto Rez{l};
+  auto const nRows{Rez.size()};
+
+  for (auto i{0u}; i < nRows; ++i)
+  {
+    Rez[i] -= r[i];
   }
   
   return Rez;
@@ -225,4 +268,16 @@ auto tls::operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> r_type
   }
   
   return Rez;
+}
+
+template<class T>
+auto tls::operator*(T const& c, vector_tmpl<T> const& v) -> vector_tmpl<T>
+{
+  vector_tmpl<T> Rez{v};
+	auto const nRows{v.size()};
+	for (auto i{0u}; i < nRows; ++i)
+	{
+		Rez[i] = c*Rez[i];
+	}
+	return Rez;
 }

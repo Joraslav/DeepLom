@@ -118,7 +118,7 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 
 void Learning::Run(z_type Episode)
 {
-    z_type Epoch{0};
+    z_type Epoch{1};
     std::cout << "Begin\n" << std::endl;
     while (Epoch != Episode)
     {
@@ -134,7 +134,7 @@ void Learning::Run(z_type Episode)
 
         }
 
-        this->Q = ActMesh.Adaptive(this->Q,0.3);
+        // this->Q = ActMesh.Adaptive(this->Q,0.3);
 
         Epoch++;
     }
