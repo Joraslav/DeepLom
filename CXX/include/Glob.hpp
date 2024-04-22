@@ -16,13 +16,14 @@
 // #define DEBUG_INFO
 #define DEBUG_CONSTRUCT_DISTRUCT
 #define DEBUG_CLASSES
+// #define DEBUG_REWARD
 
 namespace tls
 {
   using namespace std;
   using sz_type = size_t;
   using z_type = int;
-  using r_type = double;
+  using r_type = long double;
   using st_type = string;
   using os_type = ofstream;
   template<class T> using vector_tmpl = vector<T>;

@@ -1,12 +1,12 @@
 #include "Glob.hpp"
 #include "Learning.hpp"
-#include "ModelSettings.hpp"
+#include "Model.hpp"
 #include "Mesh.hpp"
 
 #include <iostream>
 #include <iterator>
 
-Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh &AM) : Muscl(M), ActMesh(AM)
+Learning::Learning(vector_type const& Set, Model const &M, Mesh &AM) : Mod(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -17,7 +17,7 @@ Learning::Learning(vector_type const& Set, ModelSettings const &M, Mesh &AM) : M
     this->Gam = Set[2];
 }
 
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh &AM) : Muscl(M), ActMesh(AM)
+Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Model const &M, Mesh &AM) : Mod(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -55,14 +55,8 @@ void Learning::SetPath(sup_st_type &SupPh)
 
 void Learning::SetStart(matrix_type const &Start)
 {
-    this->Track.resize(Start.size());
-    auto const nRows{this->Track.size()};
-
-    for (auto i{0u}; i < nRows; ++i)
-    {
-        this->Track[i].assign(Start[i].begin(),Start[i].end());
-    }
-    
+    this->Track = Start;
+    cout << this->Track << endl;
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
@@ -91,8 +85,6 @@ void Learning::RandomQ()
     }
 }
 
-
-
 auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 {
     z_type Rez;
@@ -105,7 +97,7 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 
     if (dist(gen) < this->Eps)
     {
-        std::uniform_int_distribution<> dist(0, pow(2,this->Muscl.GetNumMuscles()));
+        std::uniform_int_distribution<> dist(0, pow(2,this->Mod.GetNumActions()));
         Rez = dist(gen);
     }
     else
@@ -127,11 +119,9 @@ void Learning::Run(z_type Episode)
         {
             std::cout << "Epoch =\t" << Epoch << std::endl;
         }
-
         for (r_type h = this->t0; h < Time; h=h+dt)
         {
-            std::cout << "Check " << h << std::endl;
-
+            
         }
 
         // this->Q = ActMesh.Adaptive(this->Q,0.3);
@@ -159,6 +149,11 @@ void Learning::GetState(r_type &Nu)
             break;
         }
     }
+}
+
+auto Learning::GetReward(r_type const& x) -> r_type
+{
+    return -exp2l(abs(x)/4.)+11;
 }
 
 Learning::~Learning()

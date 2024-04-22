@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Glob.hpp"
-#include "ModelSettings.hpp"
+#include "Model.hpp"
 #include "Mesh.hpp"
 
 using namespace tls;
@@ -12,7 +12,7 @@ using sup_st_type = vector_tmpl<st_type>;
 class Learning
 {
 private:
-    ModelSettings const &Muscl;
+    Model const &Mod;
     Mesh &ActMesh;
     z_type State, Action;
     r_type Eps,Alf,Gam,t0,dt,Time;
@@ -21,8 +21,8 @@ private:
     sup_st_type Path;
     st_type Method, QPath, TrackPath;
 public:
-    Learning(vector_type const& Set, ModelSettings const &M, Mesh &AM);
-    Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, ModelSettings const &M, Mesh &AM);
+    Learning(vector_type const& Set, Model const &M, Mesh &AM);
+    Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Model const &M, Mesh &AM);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP);
     void SetPath(sup_st_type &SupPh);
@@ -33,5 +33,6 @@ public:
     void Run(z_type Episode);
     void GetQ();
     void GetState(r_type &Nu);
+    auto GetReward(r_type const& x) -> r_type;
     ~Learning();
 };

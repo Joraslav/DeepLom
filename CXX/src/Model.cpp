@@ -1,6 +1,6 @@
-#include "ModelSettings.hpp"
+#include "Model.hpp"
 
-ModelSettings::ModelSettings()
+Model::Model()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\n" << this << std::endl;
@@ -10,17 +10,17 @@ ModelSettings::ModelSettings()
     this->Name_Model = "Default";
 }
 
-ModelSettings::ModelSettings(z_type const& NumAction, st_type const& Name)
+Model::Model(z_type const& NumAction, st_type const& Name)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\n" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    SetNumMuscles(NumAction);
-    SetNameMuscles(Name);
+    SetNumActions(NumAction);
+    SetName(Name);
 }
 
-ModelSettings::ModelSettings(ModelSettings const &other)
+Model::Model(Model const &other)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Coping to " << this << std::endl;
@@ -31,41 +31,41 @@ ModelSettings::ModelSettings(ModelSettings const &other)
     this->DataPath = other.DataPath;
 }
 
-void ModelSettings::SetPath(st_type &DP)
+void Model::SetPath(st_type &DP)
 {
     st_type DataPath = "../Data";
     mkdir(DataPath.c_str());
     this->DataPath = DataPath + '/' + DP;
 }
 
-void ModelSettings::SetNumMuscles(z_type const& NumAction)
+void Model::SetNumActions(z_type const& NumAction)
 {
     this->Num_Action = NumAction;
 }
 
-void ModelSettings::SetNameMuscles(st_type const& Name)
+void Model::SetName(st_type const& Name)
 {
     this->Name_Model = Name;
 }
 
-auto ModelSettings::GetNumMuscles() const -> z_type
+auto Model::GetNumActions() const -> z_type
 {
     return this->Num_Action;
 }
 
-os_type& operator<<(os_type& os, const ModelSettings& M)
+os_type& operator<<(os_type& os, const Model& M)
 {
     os << "Name of Muscles Model\t" << M.Name_Model << std::endl;
     os << "Number of Muscles\t" << M.Num_Action << std::endl;
     return os;
 }
 
-ModelSettings::~ModelSettings()
+Model::~Model()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Distruct of Model\n" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type MusclOut{this->DataPath};
-    MusclOut << *this;
+    os_type Out{this->DataPath};
+    Out << *this;
 }

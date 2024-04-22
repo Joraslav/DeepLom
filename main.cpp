@@ -68,7 +68,7 @@ int main()
   st_type ModelPath{"ModelSettings.txt"};
   z_type a{3};
   st_type ModelName{"Car.txt"};
-  ModelSettings Model(a,ModelName);
+  Model Model(a,ModelName);
 
   st_type ActMesh{"ActMesh.txt"}, StateCount{"StateCount.txt"}, MeshHistiry{"MeshHistory.txt"};
   sup_st_type SupMeshPath{ActMesh,StateCount,MeshHistiry};    /*Mesh, Count, History*/
@@ -78,11 +78,14 @@ int main()
   st_type QP("Q.txt"), TrackP("Track.txt");
   sup_st_type SupTestPath{QP,TrackP};   /*Q, Track*/
   r_type Epsi = 0.5, Alfi = 0.3, Gamu = 0.4;
+  matrix_type Start{{0.05, 2}};
   vector_type Settings{Epsi, Alfi, Gamu};   /*Epsilon, Alfa, Gamma*/
   vector_type Time{0, 0.1, 1};    /*t0, dt, T*/
   Learning test(Settings, Model, Mesh);
   test.SetPath(SupTestPath);
   test.SetTime(Time);
+  test.SetStart(Start);
+  test.Run(10);
   #endif  //DEBUG_CLASSES
 
   return 0;
