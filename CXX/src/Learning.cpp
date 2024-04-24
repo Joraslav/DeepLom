@@ -6,7 +6,7 @@
 #include <iostream>
 #include <iterator>
 
-Learning::Learning(vector_type const& Set, Model const &M, Mesh &AM) : Mod(M), ActMesh(AM)
+Learning::Learning(vector_type const& Set, Model &M, Mesh &AM) : Mod(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -17,7 +17,7 @@ Learning::Learning(vector_type const& Set, Model const &M, Mesh &AM) : Mod(M), A
     this->Gam = Set[2];
 }
 
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Model const &M, Mesh &AM) : Mod(M), ActMesh(AM)
+Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Model &M, Mesh &AM) : Mod(M), ActMesh(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -36,13 +36,19 @@ void Learning::SetTime(vector_type &TimeArr)
     this->Time = TimeArr[2];
 }
 
-void Learning::SetPath(st_type &QP, st_type &TrackP, st_type &MeshHistoryP)
+void Learning::SetPath(st_type &QP, st_type &TrackP)
 {
     st_type DataPath = "../Data";
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + QP;
     this->TrackPath = DataPath + '/' + TrackP;
-    // this->MeshHistoryPath = DataPath + '/' + MeshHistoryP;
+}
+
+void Learning::SetPath(st_type &QP)
+{
+    st_type DataPath = "../Data";
+    mkdir(DataPath.c_str());
+    this->QPath = DataPath + '/' + QP;
 }
 
 void Learning::SetPath(sup_st_type &SupPh)
@@ -51,12 +57,6 @@ void Learning::SetPath(sup_st_type &SupPh)
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + SupPh[0];
     this->TrackPath = DataPath + '/' + SupPh[1];
-}
-
-void Learning::SetStart(matrix_type const &Start)
-{
-    this->Track = Start;
-    cout << this->Track << endl;
 }
 
 void Learning::GenerateQ(z_type const &s, z_type const &a)
@@ -89,7 +89,7 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 {
     z_type Rez;
     auto Q_iter{this->Q.begin()};
-    Q_iter += ActState-1;
+    Q_iter += ActState;
     auto Q_vec = *Q_iter;
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -119,6 +119,9 @@ void Learning::Run(z_type Episode)
         {
             std::cout << "Epoch =\t" << Epoch << std::endl;
         }
+        vector_type X0 = this->Mod.GetX0();
+        
+        vector_type F0 = this->Mod.GetF0();
         for (r_type h = this->t0; h < Time; h=h+dt)
         {
             
@@ -131,11 +134,6 @@ void Learning::Run(z_type Episode)
         
 }
 
-void Learning::GetQ()
-{
-    std::cout << this->Q;
-}
-
 void Learning::GetState(r_type &Nu)
 {
     auto const nCols{this->MeshState.size()};
@@ -144,7 +142,7 @@ void Learning::GetState(r_type &Nu)
     {
         if (Nu>=MeshState[i] && Nu<MeshState[i+1])
         {
-            this->State = ++i;
+            this->State = i;
             this->ActMesh.SetCount(--State);
             break;
         }
@@ -164,5 +162,5 @@ Learning::~Learning()
 
     os_type QOut(this->QPath), TrackOut(this->TrackPath);
     QOut << this->Q;
-    TrackOut << this->Track;
+    // TrackOut << this->Track;
 }

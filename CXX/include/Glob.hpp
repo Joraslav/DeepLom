@@ -120,8 +120,9 @@ auto tls::FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type
   else
   {
     cout << "Can't find index" << endl;
+    return 1;
   }
-  return ++Rez;
+  return Rez;
 }
 
 template<class T>
