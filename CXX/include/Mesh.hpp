@@ -5,8 +5,8 @@
 #define ADAPTIVE
 
 using namespace tls;
-using vector_type = vector_tmpl<r_type>;
-using matrix_type = matrix_tmpl<r_type>;
+using vector_type = vector_tmpl<Real>;
+using matrix_type = matrix_tmpl<Real>;
 using sup_st_type = vector_tmpl<st_type>;
 
 class Mesh
@@ -15,20 +15,21 @@ private:
     st_type ActPath, StCountPath, MHistPath;
     vector_type ActMesh, StateCount;
     matrix_type MeshHistory;
-    z_type Goal;
+    Int Goal;
 public:
     Mesh(/* args */);
-    Mesh(vector_type const& M, z_type const& G);
+    Mesh(vector_type const& M, Int const& G);
+    Mesh(sup_st_type &SupPH, vector_type const& M, Int const& G);
     Mesh(Mesh const &other);
     void SetPath(st_type &AP, st_type &SCP, st_type &MHP);
     void SetPath(sup_st_type &SupPh);
-    void SetCount(z_type const &St);
+    void SetCount(Int const &St);
 
     auto GetMesh() const -> vector_type;
-    auto GetGoal() const -> z_type;
+    auto GetGoal() const -> Int;
 
     #ifdef ADAPTIVE
-    auto Adaptive(matrix_type &QL, z_type const Param) -> matrix_type;
+    auto Adaptive(matrix_type &QL, Real const Param) -> matrix_type;
     #endif //ADAPTIVE
 
     ~Mesh();

@@ -21,9 +21,8 @@
 namespace tls
 {
   using namespace std;
-  using sz_type = size_t;
-  using z_type = int;
-  using r_type = long double;
+  using Int = int;
+  using Real = long double;
   using st_type = string;
   using os_type = ofstream;
   template<class T> using vector_tmpl = vector<T>;
@@ -51,7 +50,7 @@ namespace tls
   auto operator*(matrix_tmpl<T> const &l, matrix_tmpl<T> const &r) -> matrix_tmpl<T>;
 
   template<class T>
-  auto operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> r_type;
+  auto operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> Real;
 
   template<class T>
   auto operator*(T const& c, vector_tmpl<T> const& v) -> vector_tmpl<T>;
@@ -66,13 +65,13 @@ namespace tls
   auto sgn(T v) -> T;
 
   template<class T>
-  auto Norm(vector_tmpl<T> const& v) -> r_type;
+  auto Norm(vector_tmpl<T> const& v) -> Real;
 
   template<class T>
-  auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type;
+  auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> Real;
 
   template<class T, class U>
-  auto FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type;
+  auto FindIndex(vector_tmpl<T> const& v, const U elem) -> Int;
 
   template<class T>
   auto Sum(vector_tmpl<T> const &v) -> T;
@@ -85,7 +84,7 @@ auto tls::sgn(T v) -> T
 }
 
 template<class T>
-auto tls::Norm(vector_tmpl<T> const& v) -> r_type
+auto tls::Norm(vector_tmpl<T> const& v) -> Real
 {
   auto Rez = 0.0;
   auto ScalarProd = v*v;
@@ -94,9 +93,9 @@ auto tls::Norm(vector_tmpl<T> const& v) -> r_type
 }
 
 template<class T>
-auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type
+auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> Real
 {
-  r_type Rez;
+  Real Rez;
 
   const auto& hPlusf = h+f;
   const auto& sumh = hPlusf*h;
@@ -109,9 +108,9 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> r_type
 }
 
 template<class T, class U>
-auto tls::FindIndex(vector_tmpl<T> const& v, const U &elem) -> z_type
+auto tls::FindIndex(vector_tmpl<T> const& v, const U elem) -> Int
 {
-  z_type Rez;
+  Int Rez;
   auto it = find(v.begin(),v.end(),elem);
   if (it != v.end())
   {
@@ -258,11 +257,11 @@ auto tls::operator*(matrix_tmpl<T> const &l, matrix_tmpl<T> const &r) -> matrix_
 }
 
 template<class T>
-auto tls::operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> r_type
+auto tls::operator*(vector_tmpl<T> const& l, vector_tmpl<T> const& r) -> Real
 {
   if (l.size() != r.size()){throw std::invalid_argument("wrong sizes");}  //Проверка размерности
 
-  r_type Rez = 0.0;
+  Real Rez = 0.0;
   auto const nRows{l.size()};
 
   for (auto i{0u}; i < nRows; ++i)

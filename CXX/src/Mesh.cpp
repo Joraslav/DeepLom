@@ -3,29 +3,39 @@
 Mesh::Mesh(/* args */)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Mesh\n" << this << std::endl;
+    std::cout << "Construct of Mesh\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     vector_type Default{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
     this->ActMesh = Default;
-    this->MeshHistory.resize(Default.size());
-    this->MeshHistory[0].assign(Default.begin(),Default.end());
+    this->MeshHistory.push_back(ActMesh);
+    this->StateCount.resize(ActMesh.size()-1);
     Default.clear();
 }
 
-Mesh::Mesh(vector_type const& M, z_type const& G)
+Mesh::Mesh(vector_type const& M, Int const& G)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Mesh\n" << this << std::endl;
+    std::cout << "Construct of Mesh\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     this->ActMesh = M;
-
-    this->MeshHistory.resize(M.size());
-    this->MeshHistory[0].assign(M.begin(),M.end());
-
-    this->Goal = FindIndex(this->ActMesh,G);
+    this->MeshHistory.push_back(M);
+    this->Goal = G;
     this->StateCount.resize(this->ActMesh.size()-1);
+}
+
+Mesh::Mesh(sup_st_type &SupPH, vector_type const& M, Int const& G)
+{
+    #ifdef DEBUG_CONSTRUCT_DISTRUCT
+    std::cout << "Construct of Mesh\t" << this << std::endl;
+    #endif //DEBUG_CONSTRUCT_DISTRUCT
+
+    this->ActMesh = M;
+    this->MeshHistory.push_back(M);
+    this->Goal = G;
+    this->StateCount.resize(this->ActMesh.size()-1);
+    SetPath(SupPH);
 }
 
 Mesh::Mesh(Mesh const &other)
@@ -61,7 +71,7 @@ void Mesh::SetPath(sup_st_type &SupPh)
     this->MHistPath = DataPath + '/' + SupPh[2];
 }
 
-void Mesh::SetCount(z_type const &St)
+void Mesh::SetCount(Int const &St)
 {
     this->StateCount[St]++;
 }
@@ -71,16 +81,16 @@ auto Mesh::GetMesh() const -> vector_type
     return this->ActMesh;
 }
 
-auto Mesh::GetGoal() const -> z_type
+auto Mesh::GetGoal() const -> Int
 {
     return this->Goal;
 }
 
 #ifdef ADAPTIVE
-auto Mesh::Adaptive(matrix_type &QL, z_type const Param) -> matrix_type
+auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
 {
-    sz_type Removed{0};
-    sz_type k{0}; //k=1
+    size_t Removed{0};
+    size_t k{0}; //k=1
     auto LengthStCount = this->StateCount.size();  //n=length(StateCount)
 
     while (k != LengthStCount)   //k!=n
@@ -145,7 +155,7 @@ auto Mesh::Adaptive(matrix_type &QL, z_type const Param) -> matrix_type
 Mesh::~Mesh()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Distruct of Mesh\n" << this << std::endl;
+    std::cout << "Distruct of Mesh\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     os_type ActOut(this->ActPath), CountOut(this->StCountPath), HistOut(this->MHistPath);

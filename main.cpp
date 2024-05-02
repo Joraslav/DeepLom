@@ -8,8 +8,8 @@
 #include "Mesh.hpp"
  
 using namespace tls;
-using vector_type = vector_tmpl<r_type>;
-using matrix_type = matrix_tmpl<r_type>;
+using vector_type = vector_tmpl<Real>;
+using matrix_type = matrix_tmpl<Real>;
 
 int main()
 {
@@ -17,7 +17,6 @@ int main()
 
   #ifdef DEBUG_INFO
   vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
-  r_type GP = -0.1;
 
   matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
   vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
@@ -40,34 +39,41 @@ int main()
   mt19937 gen(rd());
   uniform_real_distribution<> dist_r_type(0.0, 1.0);
   uniform_int_distribution<> dist_z_type(1, 5);
-  r_type r_Rand = dist_r_type(gen);
+  Real r_Rand = dist_r_type(gen);
   cout << "Random r_type is\n" << r_Rand << endl;
-  z_type z_Rand = dist_z_type(gen);
+  Int z_Rand = dist_z_type(gen);
   cout << "Random z_type is\n" << z_Rand << endl;
 
-  auto Iter{m1.begin()};
-  ++Iter;
-  auto NewVec = *Iter;
-  auto MaxNewVec = *max_element(begin(NewVec),end(NewVec));
-  cout << NewVec << endl;
-  cout << "Max Elem from m1(2)\n" << MaxNewVec << endl;
+  Int param = 16;
+  Int Index_v3 = FindIndex(v3,param);
+  cout << "Index of 16 in v3 is\n" << Index_v3 << endl;
 
-  z_type FindElem;
-  FindElem = *find(NewVec.begin(),NewVec.end(),MaxNewVec);
-  cout << "After find\n" << FindElem << endl;
-
-  r_type Nu = Metric(v1,v2);
+  Real Nu = Metric(v1,v2);
   cout << "Metric on v1 and v2 is " << Nu << endl;
 
-  r_type p{2.};
+  Real p{2.};
   matrix_type m5{p*m4};
   std::cout << "p*m4 is " << '\n' << m5 << std::endl;
+
+  matrix_type Mat{{1,0,0},{0,1,0},{0,0,1}};
+  cout << Mat << endl;
+  auto Vec{Mat.back()};
+  Mat.push_back(Vec);
+  cout << "Iter_i is\n" << Mat << endl;
+
+
   #endif   //DEBUG_INFO
 
   #ifdef DEBUG_CLASSES
   sup_st_type ModelPath{{"ModelSettings.txt"},{"Track.txt"}};
   vector_type Start{0.05, 0.05};
-  
+  Model model(ModelPath,Start);
+  model.SetActiveAction(0);
+
+  sup_st_type MeshPath{{"Mesh.txt"},{"StateCount.txt"},{"MeshHistory.txt"}};
+  vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+  Int GPos = FindIndex(MeshSt,0);
+  Mesh mesh(MeshPath,MeshSt,GPos);
   #endif  //DEBUG_CLASSES
 
   return 0;

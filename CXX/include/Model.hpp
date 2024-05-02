@@ -3,32 +3,34 @@
 #include "Glob.hpp"
 
 using namespace tls;
-using vector_type = vector_tmpl<r_type>;
-using matrix_type = matrix_tmpl<r_type>;
+using vector_type = vector_tmpl<Real>;
+using matrix_type = matrix_tmpl<Real>;
 using sup_st_type = vector_tmpl<st_type>;
 
 class Model
 {
 private:
-    st_type DataPath;
-    st_type Name_Model, XPath;
-    z_type Num_Action;
+    st_type DataPath, XPath;
+    st_type Name_Model;
+    Int Num_Action, Active_Action;
     vector_type Start;
     matrix_type X;
 public:
     Model();
-    Model(z_type const& NumAction, st_type const& Name);
+    Model(sup_st_type &SP, vector_type const& XStart);
     Model(Model const &other);
     void SetStart(vector_type const& XStart);
-    auto U(z_type const& Action) -> r_type;
-    void F(vector_type const& x, z_type const Action, r_type const h);
+    auto U(Int const& Action) -> Real;
+    auto F(vector_type x, Real h) -> vector_type;
+    void WriteF(vector_type const& F);
     void SetPath(st_type &DP);
     void SetPath(sup_st_type &SP);
-    void SetNumActions(z_type const& NumMuscles);
+    void SetNumActions(Int const& NumAction);
     void SetName(st_type const& NameMuscles);
-    void Step(r_type const& dt);
-    auto GetNumActions() const -> z_type;
-    auto GetX0() -> vector_type;
+    void SetActiveAction(Int const Act);
+    auto RungeKutta(Real const& h, Real &dt) -> vector_type;
+    auto GetNumActions() const -> Int;
+    auto GetStart() -> vector_type;
     auto GetF0() -> vector_type;
     friend os_type& operator<<(os_type& os, const Model& M);
     ~Model();

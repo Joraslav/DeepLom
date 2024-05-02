@@ -6,7 +6,7 @@
 #include <iostream>
 #include <iterator>
 
-Learning::Learning(vector_type const& Set, Model &M, Mesh &AM) : Mod(M), ActMesh(AM)
+Learning::Learning(vector_type const& Set, Model &M, Mesh &AM) : Model_(M), Mesh_(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -17,7 +17,7 @@ Learning::Learning(vector_type const& Set, Model &M, Mesh &AM) : Mod(M), ActMesh
     this->Gam = Set[2];
 }
 
-Learning::Learning(st_type &Met,r_type &Epsilon, r_type &Alfa, r_type &Gamma, Model &M, Mesh &AM) : Mod(M), ActMesh(AM)
+Learning::Learning(st_type &Met, Real &Epsilon, Real &Alfa, Real &Gamma, Model &M, Mesh &AM) : Model_(M), Mesh_(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Learning\n" << this << std::endl;
@@ -59,7 +59,7 @@ void Learning::SetPath(sup_st_type &SupPh)
     this->TrackPath = DataPath + '/' + SupPh[1];
 }
 
-void Learning::GenerateQ(z_type const &s, z_type const &a)
+void Learning::GenerateQ(Int const &s, Int const &a)
 {
     this->Q.resize(s);
     for (auto i{0u}; i < Q.size(); ++i)
@@ -85,9 +85,9 @@ void Learning::RandomQ()
     }
 }
 
-auto Learning::GreedyPolicy(z_type &ActState) -> z_type
+auto Learning::GreedyPolicy(Int &ActState) -> Int
 {
-    z_type Rez;
+    Int Rez;
     auto Q_iter{this->Q.begin()};
     Q_iter += ActState;
     auto Q_vec = *Q_iter;
@@ -97,7 +97,7 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
 
     if (dist(gen) < this->Eps)
     {
-        std::uniform_int_distribution<> dist(0, pow(2,this->Mod.GetNumActions()));
+        std::uniform_int_distribution<> dist(0, pow(2,this->Model_.GetNumActions()));
         Rez = dist(gen);
     }
     else
@@ -108,23 +108,24 @@ auto Learning::GreedyPolicy(z_type &ActState) -> z_type
     return Rez;
 }
 
-void Learning::Run(z_type Episode)
+void Learning::Run(Int const Episode)
 {
-    z_type Epoch{1};
+    Int Epoch{1};
     std::cout << "Begin\n" << std::endl;
     while (Epoch != Episode)
     {
-        this->MeshState = ActMesh.GetMesh();
+        this->MeshState = Mesh_.GetMesh();
         if (Epoch%50==0)
         {
             std::cout << "Epoch =\t" << Epoch << std::endl;
         }
-        vector_type X0 = this->Mod.GetX0();
-        
-        vector_type F0 = this->Mod.GetF0();
-        for (r_type h = this->t0; h < Time; h=h+dt)
+        vector_type X0 = this->Model_.GetStart();
+        vector_type F0 = this->Model_.GetF0();
+        // Real Nu;
+        for (Real h = this->t0; h <= Time; h=h+dt)
         {
-            
+            // Nu = Metric(X0,F0);
+
         }
 
         // this->Q = ActMesh.Adaptive(this->Q,0.3);
@@ -134,7 +135,7 @@ void Learning::Run(z_type Episode)
         
 }
 
-void Learning::GetState(r_type &Nu)
+void Learning::GetState(Real &Nu)
 {
     auto const nCols{this->MeshState.size()};
 
@@ -143,13 +144,13 @@ void Learning::GetState(r_type &Nu)
         if (Nu>=MeshState[i] && Nu<MeshState[i+1])
         {
             this->State = i;
-            this->ActMesh.SetCount(--State);
+            this->Mesh_.SetCount(--State);
             break;
         }
     }
 }
 
-auto Learning::GetReward(r_type const& x) -> r_type
+auto Learning::GetReward(Real const& x) -> Real
 {
     return -exp2l(abs(x)/4.)+11;
 }

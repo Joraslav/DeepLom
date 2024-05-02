@@ -3,27 +3,30 @@
 Model::Model()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Model\n" << this << std::endl;
+    std::cout << "Construct of Model\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     this->Num_Action = 5;
     this->Name_Model = "Kapitza";
 }
 
-Model::Model(z_type const& NumAction, st_type const& Name)
+Model::Model(sup_st_type &SP, vector_type const& XStart)
 {
-    #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Model\n" << this << std::endl;
+   #ifdef DEBUG_CONSTRUCT_DISTRUCT
+    std::cout << "Construct of Model\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    SetNumActions(NumAction);
-    SetName(Name);
+    SetPath(SP);
+    SetStart(XStart);
+    this->Num_Action = 5;
+    this->Active_Action = 0;
+    this->Name_Model = "Kapitza";
 }
 
 Model::Model(Model const &other)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Coping to " << this << std::endl;
+    std::cout << "Coping to\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     this->Num_Action = other.Num_Action;
@@ -37,41 +40,29 @@ Model::Model(Model const &other)
 void Model::SetStart(vector_type const& XStart)
 {
     this->Start = XStart;
+    this->X.push_back(XStart);
 }
 
-auto Model::U(z_type const& Action) -> r_type
+auto Model::U(Int const& Action) -> Real
 {
-    r_type Rez{0.6371};
-    switch (Action)
-    {
-    case 0:
-        Rez = 1.;
-        break;
-    case 2:
-        Rez *= 2.;
-        break;
-    case 3:
-        Rez *= 3.;
-        break;
-    case 4:
-        Rez *= 4.;
-        break;
-    case 5:
-        Rez *= 5.;
-        break;
-    default:
-        break;
-    }
+    Real Rez{0.6371};
+    return Action*Rez;
+}
+
+auto Model::F(vector_type x, Real h) -> vector_type
+{
+    vector_type Rez(x.size());
+    Real g{9.81}, l{0.1}, mu{25};
+    Real k = g/(l*powl(mu,2.));
+    Real a{3.1855};
+    Rez[0] = k*x[1];
+    Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
     return Rez;
 }
 
-void Model::F(vector_type const& x, z_type const Action, r_type const h)
+void Model::WriteF(vector_type const& F)
 {
-    r_type g{9.81}, l{0.1}, mu{25};
-    r_type k = g/(l*powl(mu,2.));
-    r_type a{3.1855};
-    this->X[0][0] = k*x[1];
-    this->X[0][1] = -sinl(x[0])*((U(Action)+a)*cosl(h)+1);  
+    this->X.push_back(F);
 }
 
 void Model::SetPath(st_type &DP)
@@ -89,7 +80,7 @@ void Model::SetPath(sup_st_type &SP)
     this->XPath = DataPath + '/' + SP[1];
 }
 
-void Model::SetNumActions(z_type const& NumAction)
+void Model::SetNumActions(Int const& NumAction)
 {
     this->Num_Action = NumAction;
 }
@@ -99,38 +90,54 @@ void Model::SetName(st_type const& Name)
     this->Name_Model = Name;
 }
 
-void Model::Step(r_type const& dt)
+void Model::SetActiveAction(Int const Act)
 {
-    
+    this->Active_Action = Act;
 }
 
-auto Model::GetNumActions() const -> z_type
+auto Model::RungeKutta(Real const& h, Real &dt) -> vector_type
+{
+    auto X_i{this->X.back()};
+    vector_type k_1 = F(X_i,h);
+    auto const& _k_2 = (dt/2.)*k_1 + X_i;
+    vector_type k_2 = F(_k_2,h+dt/2.);
+    auto const& _k_3 = (dt/2.)*k_2 + X_i;
+    vector_type k_3 = F(_k_3,h+dt/2.);
+    auto const& _k_4 = dt*k_3 + X_i;
+    vector_type k_4 = F(_k_4,h+dt);
+    Real p = 2.;
+    vector_type Rez = X_i + (dt/6.)*(k_1+p*k_2+p*k_3+k_4);
+    this->X.push_back(Rez);
+    return Rez;
+}
+
+auto Model::GetNumActions() const -> Int
 {
     return this->Num_Action;
 }
 
-auto Model::GetX0() -> vector_type
+auto Model::GetStart() -> vector_type
 {
     return this->Start;
 }
 
 auto Model::GetF0() -> vector_type
 {
-    auto XBegin = this->X.begin();
-    return *XBegin;
+    auto F0 = this->X.front();
+    return F0;
 }
 
 os_type& operator<<(os_type& os, const Model& M)
 {
-    os << "Name of Muscles Model\t" << M.Name_Model << std::endl;
-    os << "Number of Muscles\t" << M.Num_Action << std::endl;
+    os << "Name of Model\t" << M.Name_Model << std::endl;
+    os << "Number of Actions\t" << M.Num_Action << std::endl;
     return os;
 }
 
 Model::~Model()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Distruct of Model\n" << this << std::endl;
+    std::cout << "Distruct of Model\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     os_type ModelOut{this->DataPath}, XOut{this->XPath};
