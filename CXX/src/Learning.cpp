@@ -9,24 +9,25 @@
 Learning::Learning(vector_type const& Set, Model &M, Mesh &AM) : Model_(M), Mesh_(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Learning\n" << this << std::endl;
+    std::cout << "Construct of Learning\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
     this->Eps = Set[0];
     this->Alf = Set[1];
     this->Gam = Set[2];
+    GenerateQ(Mesh_.GetNumState(),Model_.GetNumActions());
 }
 
-Learning::Learning(st_type &Met, Real &Epsilon, Real &Alfa, Real &Gamma, Model &M, Mesh &AM) : Model_(M), Mesh_(AM)
+Learning::Learning(Real &Epsilon, Real &Alfa, Real &Gamma, Model &M, Mesh &AM) : Model_(M), Mesh_(AM)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Learning\n" << this << std::endl;
+    std::cout << "Construct of Learning\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    this->Method = Met;
     this->Eps = Epsilon;
     this->Alf = Alfa;
     this->Gam = Gamma;
+    GenerateQ(Mesh_.GetNumState(),Model_.GetNumActions());
 }
 
 void Learning::SetTime(vector_type &TimeArr)
@@ -36,27 +37,11 @@ void Learning::SetTime(vector_type &TimeArr)
     this->Time = TimeArr[2];
 }
 
-void Learning::SetPath(st_type &QP, st_type &TrackP)
-{
-    st_type DataPath = "../Data";
-    mkdir(DataPath.c_str());
-    this->QPath = DataPath + '/' + QP;
-    this->TrackPath = DataPath + '/' + TrackP;
-}
-
 void Learning::SetPath(st_type &QP)
 {
     st_type DataPath = "../Data";
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + QP;
-}
-
-void Learning::SetPath(sup_st_type &SupPh)
-{
-    st_type DataPath = "../Data";
-    mkdir(DataPath.c_str());
-    this->QPath = DataPath + '/' + SupPh[0];
-    this->TrackPath = DataPath + '/' + SupPh[1];
 }
 
 void Learning::GenerateQ(Int const &s, Int const &a)
@@ -110,44 +95,37 @@ auto Learning::GreedyPolicy(Int &ActState) -> Int
 
 void Learning::Run(Int const Episode)
 {
-    Int Epoch{1};
+    Int Epoch{0};
     std::cout << "Begin\n" << std::endl;
     while (Epoch != Episode)
     {
-        this->MeshState = Mesh_.GetMesh();
         if (Epoch%50==0)
         {
             std::cout << "Epoch =\t" << Epoch << std::endl;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
-        // Real Nu;
         for (Real h = this->t0; h <= Time; h=h+dt)
         {
-            // Nu = Metric(X0,F0);
-
+            Real Nu = Metric(X0,F0);
+            this->Actual_State = Mesh_.GetState(Nu);
+            this->Actual_Action = GreedyPolicy(this->Actual_State);
+            Model_.SetActiveAction(this->Actual_Action);
+            vector_type X = Model_.RungeKutta(h,dt);
+            vector_type F = Model_.F(X,h);
+            Nu = Metric(X,F);
+            Real Rew = GetReward(Nu);
+            this->Next_State = Mesh_.GetState(Nu);
+            this->Next_Action = GreedyPolicy(this->Next_State);
+            this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] + Alf*(Rew + Gam*Q[Next_State][Next_Action] - Q[Actual_State][Actual_Action]);  
+            Model_.WriteF(F);
+            X0 = X;
+            F0 = F;
         }
-
-        // this->Q = ActMesh.Adaptive(this->Q,0.3);
 
         Epoch++;
     }
         
-}
-
-void Learning::GetState(Real &Nu)
-{
-    auto const nCols{this->MeshState.size()};
-
-    for (auto i{0u}; i < nCols; i++)
-    {
-        if (Nu>=MeshState[i] && Nu<MeshState[i+1])
-        {
-            this->State = i;
-            this->Mesh_.SetCount(--State);
-            break;
-        }
-    }
 }
 
 auto Learning::GetReward(Real const& x) -> Real
@@ -158,10 +136,10 @@ auto Learning::GetReward(Real const& x) -> Real
 Learning::~Learning()
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Distructor of Learning\n" << this << std::endl;
+    std::cout << "Distruct of Learning\t" << this << std::endl;
     #endif   //DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type QOut(this->QPath), TrackOut(this->TrackPath);
+    os_type QOut(this->QPath);
     QOut << this->Q;
     // TrackOut << this->Track;
 }

@@ -10,6 +10,7 @@ Mesh::Mesh(/* args */)
     this->ActMesh = Default;
     this->MeshHistory.push_back(ActMesh);
     this->StateCount.resize(ActMesh.size()-1);
+    this->Num_States = ActMesh.size();
     Default.clear();
 }
 
@@ -23,6 +24,7 @@ Mesh::Mesh(vector_type const& M, Int const& G)
     this->MeshHistory.push_back(M);
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size()-1);
+    this->Num_States = ActMesh.size();
 }
 
 Mesh::Mesh(sup_st_type &SupPH, vector_type const& M, Int const& G)
@@ -35,6 +37,7 @@ Mesh::Mesh(sup_st_type &SupPH, vector_type const& M, Int const& G)
     this->MeshHistory.push_back(M);
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size()-1);
+    this->Num_States = ActMesh.size();
     SetPath(SupPH);
 }
 
@@ -51,6 +54,7 @@ Mesh::Mesh(Mesh const &other)
     this->ActPath = other.ActPath;
     this->StCountPath = other.StCountPath;
     this->MHistPath = other.MHistPath;
+    this->Num_States = other.Num_States;
 }
 
 void Mesh::SetPath(st_type &AP, st_type &SCP, st_type &MHP)
@@ -76,7 +80,22 @@ void Mesh::SetCount(Int const &St)
     this->StateCount[St]++;
 }
 
-auto Mesh::GetMesh() const -> vector_type
+auto Mesh::GetState(Real const& Nu) -> Int
+{
+    auto const nCols{this->ActMesh.size()};
+    for (auto i{0u}; i < nCols; i++)
+    {
+        if (Nu>=ActMesh[i] && Nu<ActMesh[i+1])
+        {
+            this->Active_State = i;
+            this->SetCount(Active_State);
+            break;
+        }
+    }
+    return this->Active_State;
+}
+
+auto Mesh::GetMesh() -> vector_type
 {
     return this->ActMesh;
 }
@@ -84,6 +103,11 @@ auto Mesh::GetMesh() const -> vector_type
 auto Mesh::GetGoal() const -> Int
 {
     return this->Goal;
+}
+
+auto Mesh::GetNumState() -> Int
+{
+    return this->Num_States;
 }
 
 #ifdef ADAPTIVE

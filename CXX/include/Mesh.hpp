@@ -15,7 +15,7 @@ private:
     st_type ActPath, StCountPath, MHistPath;
     vector_type ActMesh, StateCount;
     matrix_type MeshHistory;
-    Int Goal;
+    Int Goal, Active_State, Num_States;
 public:
     Mesh(/* args */);
     Mesh(vector_type const& M, Int const& G);
@@ -24,9 +24,10 @@ public:
     void SetPath(st_type &AP, st_type &SCP, st_type &MHP);
     void SetPath(sup_st_type &SupPh);
     void SetCount(Int const &St);
-
-    auto GetMesh() const -> vector_type;
+    auto GetState(Real const& Nu) -> Int;
+    auto GetMesh() -> vector_type;
     auto GetGoal() const -> Int;
+    auto GetNumState() -> Int;
 
     #ifdef ADAPTIVE
     auto Adaptive(matrix_type &QL, Real const Param) -> matrix_type;

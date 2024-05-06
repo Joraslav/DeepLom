@@ -74,6 +74,14 @@ int main()
   vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
   Int GPos = FindIndex(MeshSt,0);
   Mesh mesh(MeshPath,MeshSt,GPos);
+
+  st_type QPath{"Q.txt"};
+  vector_type TimeLearn{0,0.1,1};     /*t0, dt, T*/
+  vector_type Settings{0.5,0.476,0.56};   /*Eps, Alf, Gam*/
+  Learning training(Settings,model,mesh);
+  training.SetPath(QPath);
+  training.SetTime(TimeLearn);
+  training.Run(1);
   #endif  //DEBUG_CLASSES
 
   return 0;
