@@ -82,7 +82,7 @@ auto Learning::GreedyPolicy(Int &ActState) -> Int
 
     if (dist(gen) < this->Eps)
     {
-        std::uniform_int_distribution<> dist(0, pow(2,this->Model_.GetNumActions()));
+        std::uniform_int_distribution<> dist(0, this->Model_.GetNumActions());
         Rez = dist(gen);
     }
     else
@@ -101,11 +101,11 @@ void Learning::Run(Int const Episode)
     {
         if (Epoch%50==0)
         {
-            std::cout << "Epoch =\t" << Epoch << std::endl;
+            std::cout << "Epoch =\t" << Epoch+1 << std::endl;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
-        for (Real h = this->t0; h <= Time; h=h+dt)
+        for (Real h = this->t0; h < Time+dt; h=h+dt)
         {
             Real Nu = Metric(X0,F0);
             this->Actual_State = Mesh_.GetState(Nu);
@@ -130,7 +130,7 @@ void Learning::Run(Int const Episode)
 
 auto Learning::GetReward(Real const& x) -> Real
 {
-    return -exp2l(abs(x)/4.)+11;
+    return -exp2l(abs(x)/M_E)+2.;
 }
 
 Learning::~Learning()
