@@ -1,16 +1,16 @@
 #include "Model.hpp"
 
-Model::Model()
+Model::Model(Int const& NumAction)
 {
     #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\t" << this << std::endl;
     #endif //DEBUG_CONSTRUCT_DISTRUCT
 
-    this->Num_Action = 5;
+    this->Num_Action = NumAction;
     this->Name_Model = "Kapitza";
 }
 
-Model::Model(sup_st_type &SP, vector_type const& XStart)
+Model::Model(sup_st_type &SP, vector_type const& XStart, Int const NumAction)
 {
    #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\t" << this << std::endl;
@@ -18,8 +18,8 @@ Model::Model(sup_st_type &SP, vector_type const& XStart)
 
     SetPath(SP);
     SetStart(XStart);
-    this->Num_Action = 5;
-    this->Active_Action = 0;
+    this->Num_Action = NumAction;
+    this->Active_Action = 1;
     this->Name_Model = "Kapitza";
 }
 
@@ -45,18 +45,21 @@ void Model::SetStart(vector_type const& XStart)
 
 auto Model::U(Int const& Action) -> Real
 {
-    Real Rez{0.6371};
-    return Action*Rez;
+    // Real Rez{0.6371};
+    // return Action*Rez;
+    return Action-1;
 }
 
 auto Model::F(vector_type x, Real h) -> vector_type
 {
     vector_type Rez(x.size());
-    Real g{9.81}, l{0.1}, mu{25};
-    Real k = g/(l*powl(mu,2.));
-    Real a{3.1855};
-    Rez[0] = k*x[1];
-    Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
+    // Real g{9.81}, l{0.1}, mu{25};
+    // Real k = g/(l*powl(mu,2.));
+    // Real a{3.1855};
+    // Rez[0] = k*x[1];
+    // Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
+    Rez[0] = x[1];
+    Rez[1] = -sinl(x[0])+U(Active_Action)*sgn(x[0]);
     return Rez;
 }
 

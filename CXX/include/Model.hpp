@@ -16,8 +16,8 @@ private:
     vector_type Start;
     matrix_type X;
 public:
-    Model();
-    Model(sup_st_type &SP, vector_type const& XStart);
+    Model(Int const& NumAction);
+    Model(sup_st_type &SP, vector_type const& XStart, Int const NumAction);
     Model(Model const &other);
     void SetStart(vector_type const& XStart);
     auto U(Int const& Action) -> Real;

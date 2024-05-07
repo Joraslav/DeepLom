@@ -66,8 +66,8 @@ int main()
 
   #ifdef DEBUG_CLASSES
   sup_st_type ModelPath{{"ModelSettings.txt"},{"Track.txt"}};
-  vector_type Start{0.05, 0.05};
-  Model model(ModelPath,Start);
+  vector_type Start{M_PI_4, 0.18};
+  Model model(ModelPath,Start,3);
   model.SetActiveAction(0);
 
   sup_st_type MeshPath{{"Mesh.txt"},{"StateCount.txt"},{"MeshHistory.txt"}};
@@ -76,7 +76,7 @@ int main()
   Mesh mesh(MeshPath,MeshSt,GPos);
 
   st_type QPath{"Q.txt"};
-  vector_type TimeLearn{0,0.1,1};     /*t0, dt, T*/
+  vector_type TimeLearn{0,0.1,10};     /*t0, dt, T*/
   vector_type Settings{0.5,0.476,0.56};   /*Eps, Alf, Gam*/
   Learning training(Settings,model,mesh);
   training.SetPath(QPath);

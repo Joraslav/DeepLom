@@ -118,11 +118,10 @@ void Learning::Run(Int const Episode)
             this->Next_State = Mesh_.GetState(Nu);
             this->Next_Action = GreedyPolicy(this->Next_State);
             this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] + Alf*(Rew + Gam*Q[Next_State][Next_Action] - Q[Actual_State][Actual_Action]);  
-            Model_.WriteF(F);
             X0 = X;
             F0 = F;
         }
-
+        
         Epoch++;
     }
         
