@@ -170,11 +170,33 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
     //     LengthStCount = this->StateCount.size();  //?????????????????????
     // }
 
-    size_t k{1};
+
+    size_t k{0};
     auto SizeStCount = this->StateCount.size();
     Real half{0.5};
-    while (k < SizeStCount-1)
+    while (k < SizeStCount)
     {
+        if (k==0)
+        {
+            if (StateCount[k] >= Param*Sum(StateCount))
+            {
+                ActMesh.insert(ActMesh.begin()+k,3*ActMesh[k+1]);
+                QL.insert(QL.begin(),vector_type (QL.front().size(),0.));
+                StateCount.insert(StateCount.begin(),0);
+                SizeStCount = this->StateCount.size();
+            }
+        }
+        else if (k==SizeStCount-1)
+        {
+            if (StateCount[k] >= Param*Sum(StateCount))
+            {
+                ActMesh.insert(ActMesh.end()-1,3*ActMesh[k]);
+                QL.insert(QL.end(),vector_type (QL.front().size(),0));
+                StateCount.push_back(0);
+            }
+            
+        }
+        
         if (StateCount[k] >= Param*Sum(StateCount))
         {
             ActMesh.insert(ActMesh.begin()+k,(ActMesh[k]+ActMesh[k+1])*half);
@@ -185,19 +207,6 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
         }
         k++;
     }
-    k=0;
-    SizeStCount = this->StateCount.size();
-    if (StateCount[k] >= Param*Sum(StateCount))
-    {
-        ActMesh.insert(ActMesh.begin()+k,3*ActMesh[k+1]);
-        QL.insert(QL.begin(),vector_type (QL.front().size(),0.));
-        StateCount.insert(StateCount.begin(),0);
-        SizeStCount = this->StateCount.size();
-    }
-    
-    
-    
-
     std::sort(this->ActMesh.begin(),this->ActMesh.end());
 
     return QL;

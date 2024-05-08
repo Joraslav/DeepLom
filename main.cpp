@@ -2,6 +2,7 @@
 #include <iostream>  // std::{ostream, cout, endl}
 #include <stdexcept> // std::invalid_argument
 #include <ranges>    // std::views::iota
+#include <iterator>   //iterator
 
 #include "Glob.hpp"
 #include "Learning.hpp"
