@@ -120,7 +120,9 @@ void Learning::Run(Int const Episode)
             X0 = X;
             F0 = F;
         }
+        #ifdef ADAPTIVE
         this->Q = Mesh_.Adaptive(this->Q,0.3);
+        #endif //ADAPTIVE
         Epoch++;
     }
         

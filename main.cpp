@@ -41,6 +41,9 @@ int main()
   auto Index_VecM1 = FindIndex(Vec_m1,param);
   cout << "After FindIndex\n" << Index_VecM1 << endl;
 
+  v3.insert(v3.begin()+3,0);
+  cout << v3 << endl;
+
   #endif   //DEBUG_INFO
 
   #ifdef DEBUG_CLASSES
