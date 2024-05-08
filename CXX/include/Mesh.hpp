@@ -2,8 +2,6 @@
 
 #include "Glob.hpp"
 
-#define ADAPTIVE
-
 using namespace tls;
 using vector_type = vector_tmpl<Real>;
 using matrix_type = matrix_tmpl<Real>;

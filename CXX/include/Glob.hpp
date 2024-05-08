@@ -14,6 +14,7 @@
 #include <direct.h>   //making folder
 
 // #define DEBUG_INFO
+#define ADAPTIVE
 #define DEBUG_CONSTRUCT_DISTRUCT
 #define DEBUG_CLASSES
 // #define DEBUG_REWARD
@@ -115,13 +116,13 @@ auto tls::FindIndex(vector_tmpl<T> const& v, const U elem) -> Int
   if (it != v.end())
   {
     Rez = it - v.begin();
+    return Rez;
   }
   else
   {
-    cout << "Can't find index" << endl;
+    cout << "Something wrong in FindIndex!!!" << endl;
     return 1;
   }
-  return Rez;
 }
 
 template<class T>

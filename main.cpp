@@ -16,18 +16,9 @@ int main()
 
 
   #ifdef DEBUG_INFO
-  vector_type MeshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
-
   matrix_type m1{{1, 2, 3}, {4, 5, 6}}, m2{m1};
   vector_type v1{0,-4,-3}, v2{0,4,3}, v3{0,16,9};
   matrix_type m3{{1,0,0},{0,1,0},{0,0,1}}, m4{{2,0,0},{0,2,0},{0,0,2}};
-  cout << "m1:\n" << m1 << endl;
-  cout << "m2:\n" << m2 << endl;
-  cout << "m1 + m2:\n" << m1 + m2 << endl;
-
-  cout << "v1:\n" << v1 << std::endl;
-  cout << "v2:\n" << v2 << std::endl;
-  cout << "v1+v2:\n" << v1+v2 << std::endl;
 
   cout << "Norm v1\n" << Norm(v1) << endl;
   cout << "Sclar product of vector:\n" << v1*v2 << endl;
@@ -44,23 +35,11 @@ int main()
   Int z_Rand = dist_z_type(gen);
   cout << "Random z_type is\n" << z_Rand << endl;
 
-  Int param = 16;
-  Int Index_v3 = FindIndex(v3,param);
-  cout << "Index of 16 in v3 is\n" << Index_v3 << endl;
-
-  Real Nu = Metric(v1,v2);
-  cout << "Metric on v1 and v2 is " << Nu << endl;
-
-  Real p{2.};
-  matrix_type m5{p*m4};
-  std::cout << "p*m4 is " << '\n' << m5 << std::endl;
-
-  matrix_type Mat{{1,0,0},{0,1,0},{0,0,1}};
-  cout << Mat << endl;
-  auto Vec{Mat.back()};
-  Mat.push_back(Vec);
-  cout << "Iter_i is\n" << Mat << endl;
-
+  Int param = 6;
+  auto Vec_m1_iter{m1.begin()+1};
+  auto Vec_m1 = *Vec_m1_iter;
+  auto Index_VecM1 = FindIndex(Vec_m1,param);
+  cout << "After FindIndex\n" << Index_VecM1 << endl;
 
   #endif   //DEBUG_INFO
 
@@ -81,6 +60,7 @@ int main()
   Learning training(Settings,model,mesh);
   training.SetPath(QPath);
   training.SetTime(TimeLearn);
+  training.RandomQ();
   training.Run(1);
   #endif  //DEBUG_CLASSES
 

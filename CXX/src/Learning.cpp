@@ -73,8 +73,7 @@ void Learning::RandomQ()
 auto Learning::GreedyPolicy(Int &ActState) -> Int
 {
     Int Rez;
-    auto Q_iter{this->Q.begin()};
-    Q_iter += ActState;
+    auto Q_iter{this->Q.begin()+ActState};
     auto Q_vec = *Q_iter;
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -82,12 +81,12 @@ auto Learning::GreedyPolicy(Int &ActState) -> Int
 
     if (dist(gen) < this->Eps)
     {
-        std::uniform_int_distribution<> dist(0, this->Model_.GetNumActions());
+        std::uniform_int_distribution<> dist(0, this->Model_.GetNumActions()-1);
         Rez = dist(gen);
     }
     else
     {
-        auto Elem = *std::max_element(begin(Q_vec),end(Q_vec));
+        auto Elem = *std::max_element(Q_vec.begin(),Q_vec.end());
         Rez = tls::FindIndex(Q_vec,Elem);
     }
     return Rez;
@@ -140,5 +139,4 @@ Learning::~Learning()
 
     os_type QOut(this->QPath);
     QOut << this->Q;
-    // TrackOut << this->Track;
 }
