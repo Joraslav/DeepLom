@@ -171,42 +171,46 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
     // }
 
 
-    size_t k{0};
-    auto SizeStCount = this->StateCount.size();
-    Real half{0.5};
-    while (k < SizeStCount)
-    {
-        if (k==0)
-        {
-            if (StateCount[k] >= Param*Sum(StateCount))
-            {
-                ActMesh.insert(ActMesh.begin()+k,3*ActMesh[k+1]);
-                QL.insert(QL.begin(),vector_type (QL.front().size(),0.));
-                StateCount.insert(StateCount.begin(),0);
-                SizeStCount = this->StateCount.size();
-            }
-        }
-        else if (k==SizeStCount-1)
-        {
-            if (StateCount[k] >= Param*Sum(StateCount))
-            {
-                ActMesh.insert(ActMesh.end()-1,3*ActMesh[k]);
-                QL.insert(QL.end(),vector_type (QL.front().size(),0));
-                StateCount.push_back(0);
-            }
+    // size_t k{0};
+    // auto SizeStCount = this->StateCount.size();
+    // Real half{0.5};
+    // while (k < SizeStCount)
+    // {
+    //     if (k==0)
+    //     {
+    //         if (StateCount[k] >= Param*Sum(StateCount))
+    //         {
+    //             ActMesh.insert(ActMesh.begin()+k,3*ActMesh[k+1]);
+    //             QL.insert(QL.begin(),vector_type (QL.front().size(),0.));
+    //             StateCount.insert(StateCount.begin(),0);
+    //             SizeStCount = this->StateCount.size();
+    //         }
+    //     }
+    //     else if (k==SizeStCount-1)
+    //     {
+    //         if (StateCount[k] >= Param*Sum(StateCount))
+    //         {
+    //             ActMesh.insert(ActMesh.end()-1,3*ActMesh[k]);
+    //             QL.insert(QL.end(),vector_type (QL.front().size(),0));
+    //             StateCount.push_back(0);
+    //         }
             
-        }
+    //     }
         
-        if (StateCount[k] >= Param*Sum(StateCount))
-        {
-            ActMesh.insert(ActMesh.begin()+k,(ActMesh[k]+ActMesh[k+1])*half);
-            QL[k] = half*QL[k];
-            QL.insert(QL.begin()+k,QL[k]);
-            StateCount.insert(StateCount.begin()+k,0);
-            SizeStCount = this->StateCount.size();
-        }
-        k++;
-    }
+    //     if (StateCount[k] >= Param*Sum(StateCount))
+    //     {
+    //         ActMesh.insert(ActMesh.begin()+k,(ActMesh[k]+ActMesh[k+1])*half);
+    //         QL[k] = half*QL[k];
+    //         QL.insert(QL.begin()+k,QL[k]);
+    //         StateCount.insert(StateCount.begin()+k,0);
+    //         SizeStCount = this->StateCount.size();
+    //     }
+    //     k++;
+    // }
+
+    vector_type Zeros(this->StateCount.size());
+    
+
     std::sort(this->ActMesh.begin(),this->ActMesh.end());
 
     return QL;

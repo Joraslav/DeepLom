@@ -47,7 +47,11 @@
         "numbers": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "cstring": "cpp",
+        "list": "cpp",
+        "sstream": "cpp",
+        "cinttypes": "cpp"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"

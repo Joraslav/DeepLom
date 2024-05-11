@@ -14,6 +14,27 @@ using matrix_type = matrix_tmpl<Real>;
 
 int main()
 {
+  #ifdef DEBUG_ADAPTIVE
+  vector_type StateCount{190,0,34,0,0,35,0,237};
+  vector_type ActMesh{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+  matrix_type QL(StateCount.size(),{0,0,0});
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dist(0.0, 1.0);
+  auto const nRows{QL.size()};
+  auto const nCols{QL.front().size()};
+  for (auto i{0u}; i < nRows; ++i)
+  {
+    for (auto j{0u}; j < nCols; ++j)
+      {
+        QL[i][j] = dist(gen);
+      }
+  }
+  vector_type Zeros;
+  Zeros = FindIndex(StateCount,is_zero);
+  cout << "Index zeros in StateCount\n" << Zeros << endl;
+  
+  #endif //DEBUG_ADAPTIVE
 
 
   #ifdef DEBUG_INFO

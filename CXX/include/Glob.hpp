@@ -14,10 +14,11 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
+#define DEBUG_ADAPTIVE
 // #define DEBUG_INFO
-#define ADAPTIVE
-#define DEBUG_CONSTRUCT_DISTRUCT
-#define DEBUG_CLASSES
+// #define ADAPTIVE
+// #define DEBUG_CONSTRUCT_DISTRUCT
+// #define DEBUG_CLASSES
 // #define DEBUG_REWARD
 
 namespace tls
@@ -72,8 +73,14 @@ namespace tls
   template<class T>
   auto Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> Real;
 
+  template<class T>
+  bool is_zero(T n);
+
   template<class T, class U>
   auto FindIndex(vector_tmpl<T> const& v, const U elem) -> Int;
+
+  template<class T>
+  auto FindIndex(vector_tmpl<T> const& v, bool(*condition)(T)) -> vector_tmpl<T>;
 
   template<class T>
   auto Sum(vector_tmpl<T> const &v) -> T;
@@ -109,6 +116,9 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> Real
   return Rez;
 }
 
+template<class T>
+bool tls::is_zero(T n)  {return n==0;}
+
 template<class T, class U>
 auto tls::FindIndex(vector_tmpl<T> const& v, const U elem) -> Int
 {
@@ -123,6 +133,35 @@ auto tls::FindIndex(vector_tmpl<T> const& v, const U elem) -> Int
   {
     cout << "Something wrong in FindIndex!!!" << endl;
     return 1;
+  }
+}
+
+template<class T>
+auto tls::FindIndex(vector_tmpl<T> const& v, bool(*condition)(T)) -> vector_tmpl<T>
+{
+  vector_tmpl<T> Rez;
+  vector_tmpl<T> v_copy{v};
+  T Remove{0};
+  while (v_copy.size() != 1)
+  {
+    auto it{find_if(v_copy.begin(),v_copy.end(),condition)};
+    if (it != v_copy.end())
+    {
+      auto input = it - v_copy.begin();
+      // auto iter{v_copy.begin()+input};
+      Rez.push_back(input + Remove);
+    }
+    else {break;}
+    v_copy.erase(it);
+    Remove++;
+  }
+  if (!Rez.empty())
+  {
+    return Rez;
+  }
+  else
+  {
+    return vector_tmpl<T>();
   }
 }
 
