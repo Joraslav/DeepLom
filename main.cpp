@@ -15,8 +15,10 @@ using matrix_type = matrix_tmpl<Real>;
 int main()
 {
   #ifdef DEBUG_ADAPTIVE
-  vector_type StateCount{190,0,34,0,0,35,0,237};
-  vector_type ActMesh{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
+  vector_type StateCount{190,0,23,0,34,1,2,0,35,0,237};
+  vector_type ActMesh{-INFINITY, -5, -3, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, 3, INFINITY};
+  Int Goal = FindIndex(ActMesh,0);
+  cout << "Goal is\n" << Goal << endl;
   matrix_type QL(StateCount.size(),{0,0,0});
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -33,7 +35,20 @@ int main()
   vector_type Zeros;
   Zeros = FindIndex(StateCount,is_zero);
   cout << "Index zeros in StateCount\n" << Zeros << endl;
-  
+  cout << "ActMesh\n" << ActMesh << endl;
+  Int Remove{0};
+  for (auto &index : Zeros)
+  {
+    if ((index!=Goal-Remove) && (index!=Goal-1-Remove) && (index!=Goal+1-Remove))
+    {
+      ActMesh[index+1-Remove] = (ActMesh[index-Remove]+ActMesh[index+1-Remove])*0.5;
+      ActMesh.erase(ActMesh.begin()+index-Remove);
+      QL.erase(QL.begin()+(index-Remove));
+      cout << "ActMesh\n" << ActMesh << endl;
+      StateCount.erase(StateCount.begin()+(index-Remove));
+      Remove++;
+    }
+  }  
   #endif //DEBUG_ADAPTIVE
 
 
