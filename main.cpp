@@ -15,7 +15,7 @@ using matrix_type = matrix_tmpl<Real>;
 int main()
 {
   #ifdef DEBUG_ADAPTIVE
-  vector_type StateCount{150,0,23,0,34,1,2,0,35,0,210};
+  vector_type StateCount{150,0,1,4,170,0,0,0,2,0,215};
   vector_type ActMesh{-INFINITY, -5, -3, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, 3, INFINITY};
   Int Goal = FindIndex(ActMesh,0);
   cout << "Goal is\n" << Goal << endl;
@@ -39,7 +39,7 @@ int main()
   Int Remove{0};
   for (auto &index : Zeros)
   {
-    if ((index!=Goal-Remove) && (index!=Goal-1-Remove) && (index!=Goal+1-Remove))
+    if ((index!=Goal) && (index!=Goal-1) && (index!=Goal+1))
     {
       ActMesh[index+1-Remove] = (ActMesh[index-Remove]+ActMesh[index+1-Remove])*0.5;
       ActMesh.erase(ActMesh.begin()+index-Remove);
@@ -62,16 +62,38 @@ int main()
     }
   }
   cout << "Good_Pos\n" << Good_Pos << endl;
+  auto index_min_inf = FindIndex(ActMesh,-INFINITY);
+  auto index_max_inf = FindIndex(ActMesh,INFINITY);
 
-  cout << "Sum StateCount\t" << SumElem << endl;
-  auto k{0};
-  if (StateCount[k] >= p_p*SumElem)
+  Int Move{0};
+  Real half{0.5};
+  for (auto &index_g_p : Good_Pos)
   {
-    ActMesh.insert(ActMesh.begin()+1,3*ActMesh[k+1]);
-    cout << "ActMesh\n" << ActMesh << endl;
-    QL.insert(QL.begin(),vector_type(QL.front().size(),0));
-    StateCount.insert(StateCount.begin(),0);
-  }  
+    if (index_g_p==index_min_inf)
+    {
+      ActMesh.insert(ActMesh.begin()+1,3*ActMesh[index_g_p+1]);
+      cout << "ActMesh\n" << ActMesh << endl;
+      QL.insert(QL.begin(),vector_type(QL.front().size(),0));
+      StateCount.insert(StateCount.begin(),0);
+      Move++;
+    }
+    else if (index_g_p==index_max_inf-1)
+    {
+      ActMesh.insert(ActMesh.end()-1,3*ActMesh[index_g_p+1]);
+      cout << "ActMesh\n" << ActMesh << endl;
+      QL.insert(QL.end(),vector_type(QL.back().size(),0));
+      StateCount.push_back(0);
+    }
+    else
+    {
+      ActMesh.insert(ActMesh.begin()+index_g_p+Move,(ActMesh[index_g_p+Move]+ActMesh[index_g_p+Move+1])*half);
+      cout << "ActMesh\n" << ActMesh << endl;
+      QL[index_g_p+Move] = half*QL[index_g_p+Move];
+      QL.insert(QL.begin()+index_g_p+Move,QL[index_g_p+Move]);
+      
+    }
+  }
+  
   #endif //DEBUG_ADAPTIVE
 
 

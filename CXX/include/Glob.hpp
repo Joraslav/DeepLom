@@ -81,9 +81,6 @@ namespace tls
 
   template<class T>
   auto FindIndex(vector_tmpl<T> const& v, bool(*condition)(T)) -> vector_tmpl<T>;
-
-  template<class T>
-  auto Sum(vector_tmpl<T> const &v) -> T;
 }
 
 template<class T>
@@ -162,20 +159,6 @@ auto tls::FindIndex(vector_tmpl<T> const& v, bool(*condition)(T)) -> vector_tmpl
   {
     return vector_tmpl<T>();
   }
-}
-
-template<class T>
-auto tls::Sum(vector_tmpl<T> const &v) -> T
-{
-  T Rez;
-  auto const nCols{v.size()};
-
-  for (auto i{0u}; i < nCols; ++i)
-  {
-    Rez += v[i];
-  }
-
-  return Rez;  
 }
 
 template <class T>
