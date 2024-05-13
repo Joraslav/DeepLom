@@ -15,7 +15,7 @@ using matrix_type = matrix_tmpl<Real>;
 int main()
 {
   #ifdef DEBUG_ADAPTIVE
-  vector_type StateCount{190,0,23,0,34,1,2,0,35,0,237};
+  vector_type StateCount{150,0,23,0,34,1,2,0,35,0,210};
   vector_type ActMesh{-INFINITY, -5, -3, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, 3, INFINITY};
   Int Goal = FindIndex(ActMesh,0);
   cout << "Goal is\n" << Goal << endl;
@@ -48,6 +48,29 @@ int main()
       StateCount.erase(StateCount.begin()+(index-Remove));
       Remove++;
     }
+  }
+  Real p_p = 0.2;
+  Real SumElem = accumulate(StateCount.begin(),StateCount.end(),0);
+
+  auto const Length{StateCount.size()};
+  vector_type Good_Pos;
+  for (auto i{0u}; i < Length; ++i)
+  {
+    if (StateCount[i] >= p_p*SumElem)
+    {
+      Good_Pos.push_back(i);
+    }
+  }
+  cout << "Good_Pos\n" << Good_Pos << endl;
+
+  cout << "Sum StateCount\t" << SumElem << endl;
+  auto k{0};
+  if (StateCount[k] >= p_p*SumElem)
+  {
+    ActMesh.insert(ActMesh.begin()+1,3*ActMesh[k+1]);
+    cout << "ActMesh\n" << ActMesh << endl;
+    QL.insert(QL.begin(),vector_type(QL.front().size(),0));
+    StateCount.insert(StateCount.begin(),0);
   }  
   #endif //DEBUG_ADAPTIVE
 

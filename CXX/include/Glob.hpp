@@ -76,9 +76,6 @@ namespace tls
   template<class T>
   bool is_zero(T elem);
 
-  template<class T>
-  bool is_greater_param(vector_tmpl<T> const& v, T const& param);
-
   template<class T, class U>
   auto FindIndex(vector_tmpl<T> const& v, const U elem) -> Int;
 
@@ -120,13 +117,7 @@ auto tls::Metric(vector_tmpl<T> const& h, vector_tmpl<T> const& f) -> Real
 }
 
 template<class T>
-bool tls::is_zero(T elem)  {return elem==0;}
-
-template<class T>
-bool tls::is_greater_param(vector_tmpl<T> const& v, T const& param)
-{
-  
-}
+bool tls::is_zero(T elem)   {return elem==0;}
 
 template<class T, class U>
 auto tls::FindIndex(vector_tmpl<T> const& v, const U elem) -> Int
@@ -157,7 +148,6 @@ auto tls::FindIndex(vector_tmpl<T> const& v, bool(*condition)(T)) -> vector_tmpl
     if (it != v_copy.end())
     {
       auto input = it - v_copy.begin();
-      // auto iter{v_copy.begin()+input};
       Rez.push_back(input + Remove);
     }
     else {break;}
