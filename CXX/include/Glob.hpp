@@ -14,11 +14,11 @@
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
 
-#define DEBUG_ADAPTIVE
+// #define DEBUG_ADAPTIVE
 // #define DEBUG_INFO
-// #define ADAPTIVE
-// #define DEBUG_CONSTRUCT_DISTRUCT
-// #define DEBUG_CLASSES
+#define ADAPTIVE
+#define DEBUG_CONSTRUCT_DISTRUCT
+#define DEBUG_CLASSES
 // #define DEBUG_REWARD
 
 namespace tls

@@ -15,7 +15,7 @@ using matrix_type = matrix_tmpl<Real>;
 int main()
 {
   #ifdef DEBUG_ADAPTIVE
-  vector_type StateCount{150,0,1,4,170,0,0,0,2,0,215};
+  vector_type StateCount{1,0,1,4,170,0,210,180,2,0,215};
   vector_type ActMesh{-INFINITY, -5, -3, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, 3, INFINITY};
   Int Goal = FindIndex(ActMesh,0);
   cout << "Goal is\n" << Goal << endl;
@@ -79,18 +79,19 @@ int main()
     }
     else if (index_g_p==index_max_inf-1)
     {
-      ActMesh.insert(ActMesh.end()-1,3*ActMesh[index_g_p+1]);
+      ActMesh.insert(ActMesh.end()-1,3*ActMesh[index_g_p+Move]);
       cout << "ActMesh\n" << ActMesh << endl;
       QL.insert(QL.end(),vector_type(QL.back().size(),0));
       StateCount.push_back(0);
     }
     else
     {
-      ActMesh.insert(ActMesh.begin()+index_g_p+Move,(ActMesh[index_g_p+Move]+ActMesh[index_g_p+Move+1])*half);
+      ActMesh.insert(ActMesh.begin()+index_g_p+Move+1,(ActMesh[index_g_p+Move]+ActMesh[index_g_p+Move+1])*half);
       cout << "ActMesh\n" << ActMesh << endl;
       QL[index_g_p+Move] = half*QL[index_g_p+Move];
       QL.insert(QL.begin()+index_g_p+Move,QL[index_g_p+Move]);
-      
+      StateCount.insert(StateCount.begin()+index_g_p+Move,0);
+      Move++;
     }
   }
   
