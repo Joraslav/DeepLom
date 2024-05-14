@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-Mesh::Mesh(/* args */)
+Mesh::Mesh(st_type const &Mthd)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Mesh\t" << this << std::endl;
@@ -11,10 +11,11 @@ Mesh::Mesh(/* args */)
     this->MeshHistory.push_back(ActMesh);
     this->StateCount.resize(ActMesh.size() - 1);
     this->Num_States = ActMesh.size();
+    this->Method = Mthd;
     Default.clear();
 }
 
-Mesh::Mesh(vector_type const &M, Int const &G)
+Mesh::Mesh(vector_type const &M, st_type const &Mthd, Int const &G)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Mesh\t" << this << std::endl;
@@ -25,9 +26,10 @@ Mesh::Mesh(vector_type const &M, Int const &G)
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size() - 1);
     this->Num_States = ActMesh.size();
+    this->Method = Mthd;
 }
 
-Mesh::Mesh(sup_st_type &SupPH, vector_type const &M, Int const &G)
+Mesh::Mesh(sup_st_type &SupPH, st_type const &Mthd, vector_type const &M, Int const &G)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Mesh\t" << this << std::endl;
@@ -38,6 +40,7 @@ Mesh::Mesh(sup_st_type &SupPH, vector_type const &M, Int const &G)
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size() - 1);
     this->Num_States = ActMesh.size();
+    this->Method = Mthd;
     SetPath(SupPH);
 }
 
@@ -59,7 +62,7 @@ Mesh::Mesh(Mesh const &other)
 
 void Mesh::SetPath(st_type &AP, st_type &SCP, st_type &MHP)
 {
-    st_type DataPath = "../Data";
+    st_type DataPath = "../" + Method + '_' + "Data";
     mkdir(DataPath.c_str());
     this->ActPath = DataPath + '/' + AP;
     this->StCountPath = DataPath + '/' + SCP;
@@ -68,11 +71,12 @@ void Mesh::SetPath(st_type &AP, st_type &SCP, st_type &MHP)
 
 void Mesh::SetPath(sup_st_type &SupPh)
 {
-    st_type DataPath = "../Data";
+    st_type DataPath = "../" + Method + '_' + "Data";
     mkdir(DataPath.c_str());
     this->ActPath = DataPath + '/' + SupPh[0];
     this->StCountPath = DataPath + '/' + SupPh[1];
     this->MHistPath = DataPath + '/' + SupPh[2];
+    this->SCHistPath = DataPath + '/' + SupPh[3];
 }
 
 void Mesh::SetCount(Int const &St)
@@ -113,6 +117,7 @@ auto Mesh::GetNumState() -> Int
 #ifdef ADAPTIVE
 auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
 {
+    this->StateCountHistory.push_back(StateCount);
     vector_type Zeros;
     Zeros = FindIndex(StateCount, is_zero);
     if (!Zeros.empty())
@@ -170,7 +175,10 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
             }
         }
     }
-
+    this->MeshHistory.push_back(ActMesh);
+    this->StateCount.clear();
+    this->StateCount.resize(this->ActMesh.size() - 1);
+    this->Goal = FindIndex(ActMesh,0);
     return QL;
 }
 #endif // ADAPTIVE

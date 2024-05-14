@@ -18,12 +18,13 @@ private:
     Real Eps,Alf,Gam,t0,dt,Time;
     matrix_type Q;
     sup_st_type Path;
-    st_type QPath;
+    st_type QPath, Method;
 public:
     Learning(vector_type const& Set, Model &M, Mesh &AM);
     Learning(Real &Epsilon, Real &Alfa, Real &Gamma, Model &M, Mesh &AM);
     void SetTime(vector_type &TimeArr);
     void SetPath(st_type &QP);
+    void SetMethod(st_type &Mthd);
     void GenerateQ(Int const &s, Int const &a);
     void RandomQ();
     auto GreedyPolicy(Int &ActState) -> Int;

@@ -39,9 +39,14 @@ void Learning::SetTime(vector_type &TimeArr)
 
 void Learning::SetPath(st_type &QP)
 {
-    st_type DataPath = "../Data";
+    st_type DataPath = "../" + Method + '_' + "Data";
     mkdir(DataPath.c_str());
     this->QPath = DataPath + '/' + QP;
+}
+
+void Learning::SetMethod(st_type &Mthd)
+{
+    this->Method = Mthd;
 }
 
 void Learning::GenerateQ(Int const &s, Int const &a)
@@ -93,14 +98,15 @@ auto Learning::GreedyPolicy(Int &ActState) -> Int
 
 void Learning::Run(Int const Episode)
 {
-    Int Epoch{0};
-    std::cout << "Begin\n"
-              << std::endl;
-    while (Epoch != Episode)
+    Int Epoch{1};
+    cout << '\n'
+         << "Begin of Method \t" << this->Method << "\n"
+         << std::endl;
+    while (Epoch <= Episode)
     {
-        if (Epoch % 50 == 0)
+        if (Epoch % 10 == 0)
         {
-            std::cout << "Epoch =\t" << Epoch + 1 << std::endl;
+            std::cout << "Epoch =\t" << Epoch << std::endl;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
