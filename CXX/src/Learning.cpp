@@ -116,7 +116,7 @@ void Learning::Run(Int const Episode)
             this->Actual_State = Mesh_.GetState(Nu);
             this->Actual_Action = GreedyPolicy(this->Actual_State);
             Model_.SetActiveAction(this->Actual_Action);
-            vector_type X = Model_.RungeKutta(h, dt);
+            vector_type X = Model_.RungeKutta(X0, h, dt);
             vector_type F = Model_.F(X, h);
             Nu = Metric(X, F);
             Real Rew = GetReward(Nu);

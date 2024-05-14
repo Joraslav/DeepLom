@@ -163,7 +163,7 @@ int main()
   SARSA.SetMethod(Method);
   SARSA.SetPath(QPath);
   SARSA.SetTime(TimeLearn);
-  SARSA.Run(2);
+  SARSA.Run(100);
 #endif // DEBUG_CLASSES
 
   return 0;

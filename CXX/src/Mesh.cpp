@@ -178,7 +178,7 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
     this->MeshHistory.push_back(ActMesh);
     this->StateCount.clear();
     this->StateCount.resize(this->ActMesh.size() - 1);
-    this->Goal = FindIndex(ActMesh,0);
+    this->Goal = FindIndex(ActMesh, 0);
     return QL;
 }
 #endif // ADAPTIVE
@@ -189,8 +189,9 @@ Mesh::~Mesh()
     std::cout << "Distruct of Mesh\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type ActOut(this->ActPath), CountOut(this->StCountPath), HistOut(this->MHistPath);
+    os_type ActOut(this->ActPath), CountOut(this->StCountPath), MeshHistOut(this->MHistPath), StCountHistOut(this->SCHistPath);
     ActOut << this->ActMesh;
     CountOut << this->StateCount;
-    HistOut << this->MeshHistory;
+    MeshHistOut << this->MeshHistory;
+    StCountHistOut << this->StateCountHistory;
 }

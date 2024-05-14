@@ -97,19 +97,17 @@ void Model::SetActiveAction(Int const Act)
     this->Active_Action = Act;
 }
 
-auto Model::RungeKutta(Real const &h, Real &dt) -> vector_type
+auto Model::RungeKutta(vector_type &X_0, Real const &h, Real &dt) -> vector_type
 {
-    auto X_i{this->X.back()};
-    vector_type k_1 = F(X_i, h);
-    auto const &_k_2 = (dt / 2.) * k_1 + X_i;
+    vector_type k_1 = F(X_0, h);
+    auto const &_k_2 = (dt / 2.) * k_1 + X_0;
     vector_type k_2 = F(_k_2, h + dt / 2.);
-    auto const &_k_3 = (dt / 2.) * k_2 + X_i;
+    auto const &_k_3 = (dt / 2.) * k_2 + X_0;
     vector_type k_3 = F(_k_3, h + dt / 2.);
-    auto const &_k_4 = dt * k_3 + X_i;
+    auto const &_k_4 = dt * k_3 + X_0;
     vector_type k_4 = F(_k_4, h + dt);
     Real p = 2.;
-    vector_type Rez = X_i + (dt / 6.) * (k_1 + p * k_2 + p * k_3 + k_4);
-    this->X.push_back(Rez);
+    vector_type Rez = X_0 + (dt / 6.) * (k_1 + p * k_2 + p * k_3 + k_4);
     return Rez;
 }
 
