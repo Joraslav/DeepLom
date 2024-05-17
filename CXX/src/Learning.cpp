@@ -37,11 +37,12 @@ void Learning::SetTime(vector_type &TimeArr)
     this->Time = TimeArr[2];
 }
 
-void Learning::SetPath(st_type &QP)
+void Learning::SetPath(sup_st_type &SupQ)
 {
     st_type DataPath = "../" + Method + '_' + "Data";
     mkdir(DataPath.c_str());
-    this->QPath = DataPath + '/' + QP;
+    this->QPath = DataPath + '/' + SupQ[0];
+    this->QLogPath = DataPath + '/' + SupQ[1];
 }
 
 void Learning::SetMethod(st_type &Mthd)
@@ -74,7 +75,7 @@ void Learning::RandomQ()
     }
 }
 
-auto Learning::GreedyPolicy(Int &ActState) -> Int
+auto Learning::GreedyPolicy(Real Eps, Int &ActState) -> Int
 {
     Int Rez;
     auto Q_iter{this->Q.begin() + ActState};
@@ -83,7 +84,7 @@ auto Learning::GreedyPolicy(Int &ActState) -> Int
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0.0, 1.0);
 
-    if (dist(gen) < this->Eps)
+    if (dist(gen) < Eps)
     {
         std::uniform_int_distribution<> dist(0, this->Model_.GetNumActions() - 1);
         Rez = dist(gen);
@@ -114,14 +115,14 @@ void Learning::Run(Int const Episode)
         {
             Real Nu = Metric(X0, F0);
             this->Actual_State = Mesh_.GetState(Nu);
-            this->Actual_Action = GreedyPolicy(this->Actual_State);
+            this->Actual_Action = GreedyPolicy(this->Eps, this->Actual_State);
             Model_.SetActiveAction(this->Actual_Action);
             vector_type X = Model_.RungeKutta(X0, h, dt);
             vector_type F = Model_.F(X, h);
             Nu = Metric(X, F);
             Real Rew = GetReward(Nu);
             this->Next_State = Mesh_.GetState(Nu);
-            this->Next_Action = GreedyPolicy(this->Next_State);
+            this->Next_Action = GreedyPolicy(this->Eps, this->Next_State);
             this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] + Alf * (Rew + Gam * Q[Next_State][Next_Action] - Q[Actual_State][Actual_Action]);
             X0 = X;
             F0 = F;
@@ -131,11 +132,44 @@ void Learning::Run(Int const Episode)
 #endif // ADAPTIVE
         Epoch++;
     }
+    MakeQLog();
+}
+
+void Learning::MakeQLog()
+{
+    this->QLog = matrix_type(this->Q.size(), vector_type(this->Q.front().size(), 0));
+    auto const nRows{this->Q.size()};
+    for (auto i{0u}; i < nRows; ++i)
+    {
+        auto Q_iter{this->Q.begin() + i};
+        auto Q_vec = *Q_iter;
+        auto Max_elem = *max_element(Q_vec.begin(), Q_vec.end());
+        Int Iter = FindIndex(Q_vec, Max_elem);
+        this->QLog[i][Iter] = 1;
+    }
+}
+
+void Learning::Test()
+{
+    vector_type X0 = Model_.GetStart();
+    vector_type F0 = Model_.GetF0();
+    for (Real h = this->t0; h < this->Time; h += this->dt)
+    {
+        Real Nu = Metric(X0, F0);
+        this->Actual_State = Mesh_.GetState(Nu);
+        this->Actual_Action = GreedyPolicy(0., this->Actual_State);
+        Model_.SetActiveAction(this->Actual_Action);
+        vector_type X = Model_.RungeKutta(X0, h, dt);
+        Model_.WriteX(X);
+        vector_type F = Model_.F(X, h);
+        X0 = X;
+        F0 = F;
+    }
 }
 
 auto Learning::GetReward(Real const &x) -> Real
 {
-    return -exp2l(abs(x) / M_E) + 2.;
+    return -exp2l(abs(x) / M_LOG2E) + 2.;
 }
 
 Learning::~Learning()
@@ -144,6 +178,7 @@ Learning::~Learning()
     std::cout << "Distruct of Learning\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type QOut(this->QPath);
+    os_type QOut(this->QPath), QLogOut(this->QLogPath);
     QOut << this->Q;
+    QLogOut << this->QLog;
 }

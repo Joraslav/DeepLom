@@ -62,9 +62,9 @@ auto Model::F(vector_type x, Real h) -> vector_type
     return Rez;
 }
 
-void Model::WriteX(vector_type const &F)
+void Model::WriteX(vector_type const &X)
 {
-    this->X.push_back(F);
+    this->X.push_back(X);
 }
 
 void Model::SetPath(st_type &DP)

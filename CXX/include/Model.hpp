@@ -23,7 +23,7 @@ public:
     void SetStart(vector_type const &XStart);
     auto U(Int const &Action) -> Real;
     auto F(vector_type x, Real h) -> vector_type;
-    void WriteX(vector_type const &F);
+    void WriteX(vector_type const &X);
     void SetPath(st_type &DP);
     void SetPath(sup_st_type &SP);
     void SetNumActions(Int const &NumAction);

@@ -189,9 +189,8 @@ Mesh::~Mesh()
     std::cout << "Distruct of Mesh\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type ActOut(this->ActPath), CountOut(this->StCountPath), MeshHistOut(this->MHistPath), StCountHistOut(this->SCHistPath);
+    os_type ActOut(this->ActPath), MeshHistOut(this->MHistPath), StCountHistOut(this->SCHistPath);
     ActOut << this->ActMesh;
-    CountOut << this->StateCount;
     MeshHistOut << this->MeshHistory;
     StCountHistOut << this->StateCountHistory;
 }
