@@ -170,7 +170,7 @@ int main()
 
     sup_st_type SupQ{{"Q.txt"}, {"QLog.txt"}};
     vector_type TimeLearn{0., 0.1, 10.};    /*t0, dt, T*/
-    vector_type Settings{0.5, 0.476, 0.56}; /*Eps, Alf, Gam*/
+    vector_type Settings{0.6, 0.476, 0.56}; /*Eps, Alf, Gam*/
     Learning Q(Settings, to_q, mesh_q);
     Q.SetMethod(methodQLearning);
     Q.SetPath(SupQ);

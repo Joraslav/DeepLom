@@ -105,6 +105,10 @@ void Learning::Run(Int const Episode)
          << std::endl;
     while (Epoch <= Episode)
     {
+        if (Epoch % 250 == 0)
+        {
+            this->Eps = this->Eps * 0.5;
+        }
         if (Epoch % 100 == 0)
         {
             std::cout << this->Method << '\t' << "Epoch =\t" << Epoch << std::endl;
