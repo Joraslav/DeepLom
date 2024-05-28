@@ -18,7 +18,7 @@ private:
     Real Eps,Alf,Gam,t0,dt,Time;
     matrix_type Q, QLog;
     sup_st_type Path;
-    st_type QPath, QLogPath, Method;
+    st_type QPath, QLogPath, Method, TimePath;
 public:
     Learning(vector_type const& Set, Model &M, Mesh &AM);
     Learning(Real &Epsilon, Real &Alfa, Real &Gamma, Model &M, Mesh &AM);

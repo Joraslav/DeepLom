@@ -105,7 +105,7 @@ void Learning::Run(Int const Episode)
          << std::endl;
     while (Epoch <= Episode)
     {
-        if (Epoch % 250 == 0)
+        if (Epoch % 500 == 0)
         {
             this->Eps = this->Eps * 0.5;
         }
@@ -146,7 +146,10 @@ void Learning::Run(Int const Episode)
             F0 = F;
         }
 #ifdef ADAPTIVE
-        this->Q = Mesh_.Adaptive(this->Q, 0.3);
+        if (Epoch != Episode)
+        {
+            this->Q = Mesh_.Adaptive(this->Q, 0.3);
+        }
 #endif // ADAPTIVE
         Epoch++;
     }
@@ -188,7 +191,7 @@ void Learning::Test()
 
 auto Learning::GetReward(Real const &x) -> Real
 {
-    return -exp2l(abs(x) / 0.82) + 2.;
+    return -exp2l(abs(x) / 0.54) + 2.;
 }
 
 Learning::~Learning()

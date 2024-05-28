@@ -26,7 +26,7 @@ namespace tls
 {
   using namespace std;
   using Int = int;
-  using Real = long double;
+  using Real = double;
   using st_type = string;
   using os_type = ofstream;
   template<class T> using vector_tmpl = vector<T>;

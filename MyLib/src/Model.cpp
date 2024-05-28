@@ -45,21 +45,21 @@ void Model::SetStart(vector_type const &XStart)
 
 auto Model::U(Int const &Action) -> Real
 {
-    // Real Rez{0.6371};
-    // return Action*Rez;
-    return Action - 1;
+    Real Rez{0.3};
+    return Action*Rez;
+    // return Action - 1;
 }
 
 auto Model::F(vector_type x, Real h) -> vector_type
 {
     vector_type Rez(x.size());
-    // Real g{9.81}, l{0.1}, mu{25};
-    // Real k = g/(l*powl(mu,2.));
-    // Real a{3.1855};
-    // Rez[0] = k*x[1];
-    // Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
-    Rez[0] = x[1];
-    Rez[1] = -sinl(x[0]) + U(Active_Action) * sgn(x[0]) * 1.5;
+    Real g{9.81}, l{0.1}, mu{25};
+    Real k = g/(l*powl(mu,2.));
+    Real a{1.5};
+    Rez[0] = k*x[1];
+    Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
+    // Rez[0] = x[1];
+    // Rez[1] = -sinl(x[0]) + U(Active_Action) * sgn(x[0]);
     return Rez;
 }
 
