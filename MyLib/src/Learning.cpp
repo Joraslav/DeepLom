@@ -105,25 +105,39 @@ void Learning::Run(Int const Episode)
          << std::endl;
     while (Epoch <= Episode)
     {
-        if (Epoch % 10 == 0)
+        if (Epoch % 100 == 0)
         {
-            std::cout << "Epoch =\t" << Epoch << std::endl;
+            std::cout << this->Method << '\t' << "Epoch =\t" << Epoch << std::endl;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
-        for (Real h = this->t0; h < Time + dt; h = h + dt)
+        for (Real h = this->t0; h <= Time; h = h + dt)
         {
             Real Nu = Metric(X0, F0);
             this->Actual_State = Mesh_.GetState(Nu);
             this->Actual_Action = GreedyPolicy(this->Eps, this->Actual_State);
             Model_.SetActiveAction(this->Actual_Action);
             vector_type X = Model_.RungeKutta(X0, h, dt);
+            // vector_type X = Model_.Euler(X0,h,dt);
             vector_type F = Model_.F(X, h);
             Nu = Metric(X, F);
             Real Rew = GetReward(Nu);
             this->Next_State = Mesh_.GetState(Nu);
             this->Next_Action = GreedyPolicy(this->Eps, this->Next_State);
-            this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] + Alf * (Rew + Gam * Q[Next_State][Next_Action] - Q[Actual_State][Actual_Action]);
+            if (this->Method == "SARSA")
+            {
+                this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] +
+                                                       Alf * (Rew + Gam * Q[Next_State][Next_Action] - Q[Actual_State][Actual_Action]);
+            }
+            else if (this->Method == "Q-Learning")
+            {
+                auto Q_iter{this->Q.begin() + Next_State};
+                auto Q_vec = *Q_iter;
+                auto Max = *std::max_element(Q_vec.begin(), Q_vec.end());
+                // auto Max_arg = tls::FindIndex(Q_vec, Max);
+                this->Q[Actual_State][Actual_Action] = (1 - Alf) * Q[Actual_State][Actual_Action] +
+                                                       Alf * (Rew + Gam * Max);
+            }
             X0 = X;
             F0 = F;
         }
@@ -160,6 +174,7 @@ void Learning::Test()
         this->Actual_Action = GreedyPolicy(0., this->Actual_State);
         Model_.SetActiveAction(this->Actual_Action);
         vector_type X = Model_.RungeKutta(X0, h, dt);
+        // vector_type X = Model_.Euler(X0,h,dt);
         Model_.WriteX(X);
         vector_type F = Model_.F(X, h);
         X0 = X;
@@ -169,7 +184,7 @@ void Learning::Test()
 
 auto Learning::GetReward(Real const &x) -> Real
 {
-    return -exp2l(abs(x) / M_LOG2E) + 2.;
+    return -exp2l(abs(x) / 0.82) + 2.;
 }
 
 Learning::~Learning()

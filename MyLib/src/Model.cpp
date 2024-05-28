@@ -34,6 +34,7 @@ Model::Model(Model const &other)
     this->Num_Action = other.Num_Action;
     this->Name_Model = other.Name_Model;
     this->Start = other.Start;
+    this->Active_Action = other.Active_Action;
 }
 
 void Model::SetStart(vector_type const &XStart)
@@ -58,7 +59,7 @@ auto Model::F(vector_type x, Real h) -> vector_type
     // Rez[0] = k*x[1];
     // Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
     Rez[0] = x[1];
-    Rez[1] = -sinl(x[0]) + U(Active_Action) * sgn(x[0]);
+    Rez[1] = -sinl(x[0]) + U(Active_Action) * sgn(x[0]) * 1.5;
     return Rez;
 }
 
@@ -111,6 +112,11 @@ auto Model::RungeKutta(vector_type &X_0, Real const &h, Real &dt) -> vector_type
     return Rez;
 }
 
+auto Model::Euler(vector_type &X_0, Real const &h, Real &dt) -> vector_type
+{
+    vector_type Rez = X_0 + dt*F(X_0,h);
+    return Rez;
+}
 auto Model::GetNumActions() const -> Int
 {
     return this->Num_Action;

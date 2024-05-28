@@ -30,6 +30,7 @@ public:
     void SetName(st_type const &NameMuscles);
     void SetActiveAction(Int const Act);
     auto RungeKutta(vector_type &X_0, Real const &h, Real &dt) -> vector_type;
+    auto Euler(vector_type &X_0, Real const &h, Real &dt) -> vector_type;
     auto GetNumActions() const -> Int;
     auto GetStart() -> vector_type;
     auto GetF0() -> vector_type;

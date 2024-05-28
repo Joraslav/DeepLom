@@ -13,13 +13,14 @@
 #include <random>   //randomize
 #include <iterator>   //iterator
 #include <direct.h>   //making folder
+#include <numeric>
 
 // #define DEBUG_ADAPTIVE
 // #define DEBUG_INFO
 #define ADAPTIVE
 #define DEBUG_CONSTRUCT_DISTRUCT
 #define DEBUG_CLASSES
-// #define DEBUG_REWARD
+// #define DEBUG_MLPACK
 
 namespace tls
 {
