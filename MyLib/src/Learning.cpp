@@ -107,11 +107,8 @@ void Learning::Run(Int const Episode)
     {
         if (Epoch % 500 == 0)
         {
-            this->Eps = this->Eps * 0.5;
-        }
-        if (Epoch % 100 == 0)
-        {
-            std::cout << this->Method << '\t' << "Epoch =\t" << Epoch << std::endl;
+            this->Eps = this->Eps * 0.75;
+            this->Gam = this->Gam + 0.05;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
@@ -122,7 +119,6 @@ void Learning::Run(Int const Episode)
             this->Actual_Action = GreedyPolicy(this->Eps, this->Actual_State);
             Model_.SetActiveAction(this->Actual_Action);
             vector_type X = Model_.RungeKutta(X0, h, dt);
-            // vector_type X = Model_.Euler(X0,h,dt);
             vector_type F = Model_.F(X, h);
             Nu = Metric(X, F);
             Real Rew = GetReward(Nu);
@@ -135,16 +131,14 @@ void Learning::Run(Int const Episode)
             }
             else if (this->Method == "Q-Learning")
             {
-                auto Q_iter{this->Q.begin() + Next_State};
+                auto Q_iter{this->Q.begin()+Next_State};
                 auto Q_vec = *Q_iter;
-                auto Max = *std::max_element(Q_vec.begin(), Q_vec.end());
-                // auto Max_arg = tls::FindIndex(Q_vec, Max);
-                this->Q[Actual_State][Actual_Action] = (1 - Alf) * Q[Actual_State][Actual_Action] +
-                                                       Alf * (Rew + Gam * Max);
+                auto Max = *max_element(Q_vec.begin(),Q_vec.end());
+                this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] +
+                                                        Alf * (Rew + Gam * Max - Q[Actual_State][Actual_Action]);
             }
-            X0 = X;
-            F0 = F;
         }
+
 #ifdef ADAPTIVE
         if (Epoch != Episode)
         {

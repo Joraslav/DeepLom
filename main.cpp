@@ -171,7 +171,7 @@ int main()
 
      sup_st_type SupQ{{"Q.txt"}, {"QLog.txt"}, timelearn};
      vector_type TimeLearn{0., 0.1, 50.};    /*t0, dt, T*/
-     vector_type Settings{0.6, 0.476, 0.56}; /*Eps, Alf, Gam*/
+     vector_type Settings{0.6, 0.376, 0.56}; /*Eps, Alf, Gam*/
      Learning Q(Settings, to_q, mesh_q);
      Learning SARSA(Settings, to_sarsa, mesh_sarsa);
      Q.SetMethod(methodQLearning);
