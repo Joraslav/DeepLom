@@ -107,8 +107,9 @@ void Learning::Run(Int const Episode)
     {
         if (Epoch % 500 == 0)
         {
-            this->Eps = this->Eps * 0.75;
+            this->Eps = this->Eps * 0.5;
             this->Gam = this->Gam + 0.05;
+            cout << this->Method << "Epoch = " << Epoch << endl;
         }
         vector_type X0 = this->Model_.GetStart();
         vector_type F0 = this->Model_.GetF0();
@@ -137,8 +138,9 @@ void Learning::Run(Int const Episode)
                 this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] +
                                                         Alf * (Rew + Gam * Max - Q[Actual_State][Actual_Action]);
             }
+            X0 = X;
+            F0 = F;
         }
-
 #ifdef ADAPTIVE
         if (Epoch != Episode)
         {

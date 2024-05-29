@@ -18,7 +18,7 @@
 // #define DEBUG_ADAPTIVE
 // #define DEBUG_INFO
 #define ADAPTIVE
-#define DEBUG_CONSTRUCT_DISTRUCT
+// #define DEBUG_CONSTRUCT_DISTRUCT
 #define DEBUG_CLASSES
 // #define DEBUG_MLPACK
 

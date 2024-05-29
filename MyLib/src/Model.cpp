@@ -55,6 +55,7 @@ auto Model::F(vector_type x, Real h) -> vector_type
     vector_type Rez(x.size());
     Real g{9.81}, l{0.1}, mu{25};
     Real k = g/(l*powl(mu,2.));
+    // Real k{0.08};
     Real a{1.5};
     Rez[0] = k*x[1];
     Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
