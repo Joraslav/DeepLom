@@ -108,7 +108,7 @@ void Learning::Run(Int const Episode)
         if (Epoch % 500 == 0)
         {
             this->Eps = this->Eps * 0.5;
-            this->Gam = this->Gam + 0.05;
+            // this->Gam = this->Gam + 0.05;
             cout << this->Method << "Epoch = " << Epoch << endl;
         }
         vector_type X0 = this->Model_.GetStart();
