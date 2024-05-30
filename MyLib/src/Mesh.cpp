@@ -1,20 +1,5 @@
 #include "Mesh.hpp"
 
-Mesh::Mesh(st_type const &Mthd)
-{
-#ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Mesh\t" << this << std::endl;
-#endif // DEBUG_CONSTRUCT_DISTRUCT
-
-    vector_type Default{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.1, 0.5, 1, INFINITY};
-    this->ActMesh = Default;
-    this->MeshHistory.push_back(ActMesh);
-    this->StateCount.resize(ActMesh.size() - 1);
-    this->Num_States = ActMesh.size();
-    this->Method = Mthd;
-    Default.clear();
-}
-
 Mesh::Mesh(vector_type const &M, st_type const &Mthd, Int const &G)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
@@ -25,11 +10,11 @@ Mesh::Mesh(vector_type const &M, st_type const &Mthd, Int const &G)
     this->MeshHistory.push_back(M);
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size() - 1);
-    this->Num_States = ActMesh.size();
+    this->Num_States = StateCount.size();
     this->Method = Mthd;
 }
 
-Mesh::Mesh(sup_st_type &SupPH, st_type const &Mthd, vector_type const &M, Int const &G)
+Mesh::Mesh(vector_type const &M, Int const &G, st_type const &Mthd, sup_st_type const &Names)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Mesh\t" << this << std::endl;
@@ -39,9 +24,13 @@ Mesh::Mesh(sup_st_type &SupPH, st_type const &Mthd, vector_type const &M, Int co
     this->MeshHistory.push_back(M);
     this->Goal = G;
     this->StateCount.resize(this->ActMesh.size() - 1);
-    this->Num_States = ActMesh.size();
+    this->Num_States = StateCount.size(); // посмотреть на размерности!!!!!!!!!
+
     this->Method = Mthd;
-    SetPath(SupPH);
+    this->ActPath = Names[0];
+    this->MHistPath = Names[1];
+    this->StCountPath = Names[2];
+    this->SCHistPath = Names[3];
 }
 
 Mesh::Mesh(Mesh const &other)
@@ -54,9 +43,6 @@ Mesh::Mesh(Mesh const &other)
     this->Goal = other.Goal;
     this->MeshHistory = other.MeshHistory;
     this->StateCount = other.StateCount;
-    this->ActPath = other.ActPath;
-    this->StCountPath = other.StCountPath;
-    this->MHistPath = other.MHistPath;
     this->Num_States = other.Num_States;
 }
 
@@ -112,6 +98,44 @@ auto Mesh::GetGoal() const -> Int
 auto Mesh::GetNumState() -> Int
 {
     return this->Num_States;
+}
+
+auto Mesh::GetName(st_type const ID) -> st_type
+{
+    if (ID == "ActMesh")
+    {
+        return this->ActPath;
+    }
+    else if (ID == "StateCount")
+    {
+        return this->StCountPath;
+    }
+    else if (ID == "MeshHistory")
+    {
+        return this->MHistPath;
+    }
+    else if (ID == "StateCountHistory")
+    {
+        return this->SCHistPath;
+    }
+    else
+    {
+        return "Error.txt";
+    }
+}
+
+auto Mesh::GetVector(st_type const ID) -> vector_type
+{
+    if (ID == "Mesh")   {return this->ActMesh;}
+    else if (ID == "StateCount")    {return this->StateCount;}
+    else    {return vector_type(3, 0.);}
+}
+
+auto Mesh::GetMatrix(st_type const ID) -> matrix_type
+{
+    if (ID == "Mesh")   {return this->MeshHistory;}
+    else if (ID == "StateCount")    {return this->StateCountHistory;}
+    else    {return matrix_type(3, vector_type(3, 0.));}
 }
 
 #ifdef ADAPTIVE
@@ -183,15 +207,30 @@ auto Mesh::Adaptive(matrix_type &QL, Real const Param) -> matrix_type
 }
 #endif // ADAPTIVE
 
+void Mesh::Reload(vector_type const &M, Int const &G)
+{
+    cout << "Reload of Mesh\t" << this << endl;
+    this->ActMesh.clear();
+    this->MeshHistory.clear();
+    this->StateCount.clear();
+    this->StateCountHistory.clear();
+
+    this->ActMesh = M;
+    this->MeshHistory.push_back(M);
+    this->Goal = G;
+    this->StateCount.resize(this->ActMesh.size() - 1);
+    this->Num_States = StateCount.size();
+}
+
 Mesh::~Mesh()
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Distruct of Mesh\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type ActOut(this->ActPath), CountOut(this->StCountPath), MeshHistOut(this->MHistPath), StCountHistOut(this->SCHistPath);
-    ActOut << this->ActMesh;
-    CountOut << this->StateCount;
-    MeshHistOut << this->MeshHistory;
-    StCountHistOut << this->StateCountHistory;
+    // os_type ActOut(this->ActPath), CountOut(this->StCountPath), MeshHistOut(this->MHistPath), StCountHistOut(this->SCHistPath);
+    // ActOut << this->ActMesh;
+    // CountOut << this->StateCount;
+    // MeshHistOut << this->MeshHistory;
+    // StCountHistOut << this->StateCountHistory;
 }

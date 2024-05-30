@@ -9,6 +9,7 @@
 #include "Model.hpp"
 #include "Mesh.hpp"
 #include "Learning.hpp"
+#include "Data.hpp"
 
 #ifdef DEBUG_MLPACK
 #include <mlpack.hpp>
@@ -152,38 +153,45 @@ int main()
 #endif // DEBUG_INFO
 
 #ifdef DEBUG_CLASSES
-     st_type methodQLearning{"Q-Learning"};
-     st_type methodSARSA{"SARSA"};
-     st_type timelearn{"Time.txt"};
+     st_type methodQLearning{"Q-Learning"}, methodSARSA{"SARSA"};
+     st_type Track{"Track.txt"};
+     st_type MeshName{"Mesh.txt"}, MeshHistoryName{"MeshHistory.txt"};
+     st_type StateCountName{"StateCount.txt"}, StateCountHistoryName{"StateCountHistory.txt"};
+     sup_st_type NamesMesh{MeshName, MeshHistoryName, StateCountName, StateCountHistoryName};
 
-     str_vec model_set{{"ModelSettings.txt"}, {"Track.txt"}};
-     vector_type start{acos(-1.) / 3., 0.26};
-     Model to_q(model_set, methodQLearning, start, 5);
-     to_q.SetActiveAction(0);
-     Model to_sarsa(model_set, methodSARSA, start, 5);
-     to_sarsa.SetActiveAction(0);
-
-     sup_st_type MeshPath{{"Mesh.txt"}, {"StateCount.txt"}, {"MeshHistory.txt"}, {"StateCountHistory.txt"}};
-     vector_type meshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.05, 0.1, 0.5, 1, 3, 5, INFINITY};
+     vector_type meshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.05, 0.1, 0.3, 0.5, 1, 3, 5, INFINITY};
      Int GPos = FindIndex(meshSt, 0);
-     Mesh mesh_q(MeshPath, methodQLearning, meshSt, GPos);
-     Mesh mesh_sarsa(MeshPath, methodSARSA, meshSt, GPos);
 
-     sup_st_type SupQ{{"Q.txt"}, {"QLog.txt"}, timelearn};
-     vector_type TimeLearn{0., 0.1, 50.};    /*t0, dt, T*/
+     vector_type Start{numbers::pi / 5, 0.2};
+     vector_type TimeLearn{0., 0.1, 10};
      vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
-     Learning Q(Settings, to_q, mesh_q);
-     Learning SARSA(Settings, to_sarsa, mesh_sarsa);
-     Q.SetMethod(methodQLearning);
-     Q.SetPath(SupQ);
+
+     Model Q_Model(methodQLearning, Track, Start, 20);
+
+     Mesh Q_Mesh(meshSt,GPos,methodQLearning,NamesMesh);
+
+     Learning Q(Settings,Q_Model,Q_Mesh);
      Q.SetTime(TimeLearn);
-     Q.Run(2700);
-     Q.Test();
-     SARSA.SetMethod(methodSARSA);
-     SARSA.SetPath(SupQ);
-     SARSA.SetTime(TimeLearn);
-     SARSA.Run(2700);
-     SARSA.Test();
+     Q.SetMethod(methodQLearning);
+     Int Epo{2600};
+
+     Data Q_Data(methodQLearning);
+
+     for (Int i = 1; i < 5; i++)
+     {
+          Q_Data.MakeLearnDir(i);
+          Q.Run(Epo);
+          Q_Data.WriteMatrix(Q.GetMatrix("Q"),"Q.txt");
+          Q_Data.WriteMatrix(Q.GetMatrix("QLog"),"QLog.txt");
+          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("Mesh"),MeshHistoryName);
+          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("StateCount"),StateCountHistoryName);
+          Q_Data.WriteVector(Q_Mesh.GetVector("Mesh"),MeshName);
+          Q_Data.WriteVector(Q_Mesh.GetVector("StateCount"),StateCountName);
+          Q_Model.Reload();
+          Q_Mesh.Reload(meshSt,GPos);
+          Q.Reload(Settings);
+     }
+     
 #endif // DEBUG_CLASSES
      return 0;
 }

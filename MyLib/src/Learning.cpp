@@ -105,7 +105,7 @@ void Learning::Run(Int const Episode)
          << std::endl;
     while (Epoch <= Episode)
     {
-        if (Epoch % 500 == 0)
+        if (Epoch % 50 == 0)
         {
             this->Eps = this->Eps * 0.5;
             // this->Gam = this->Gam + 0.05;
@@ -132,11 +132,11 @@ void Learning::Run(Int const Episode)
             }
             else if (this->Method == "Q-Learning")
             {
-                auto Q_iter{this->Q.begin()+Next_State};
+                auto Q_iter{this->Q.begin() + Next_State};
                 auto Q_vec = *Q_iter;
-                auto Max = *max_element(Q_vec.begin(),Q_vec.end());
+                auto Max = *max_element(Q_vec.begin(), Q_vec.end());
                 this->Q[Actual_State][Actual_Action] = Q[Actual_State][Actual_Action] +
-                                                        Alf * (Rew + Gam * Max - Q[Actual_State][Actual_Action]);
+                                                       Alf * (Rew + Gam * Max - Q[Actual_State][Actual_Action]);
             }
             X0 = X;
             F0 = F;
@@ -190,13 +190,32 @@ auto Learning::GetReward(Real const &x) -> Real
     return -exp2l(abs(x) / 0.54) + 2.;
 }
 
+void Learning::Reload(vector_type const &Set)
+{
+    cout << "Reload of Learning\t" << this << endl;
+    this->Q.clear();
+    this->QLog.clear();
+
+    this->Eps = Set[0];
+    this->Alf = Set[1];
+    this->Gam = Set[2];
+    GenerateQ(Mesh_.GetNumState(), Model_.GetNumActions());
+}
+
+auto Learning::GetMatrix(st_type const ID) -> matrix_type
+{
+    if (ID == "Q")   {return this->Q;}
+    else if (ID == "QLog")    {return this->QLog;}
+    else    {return matrix_type(3, vector_type(3, 0.));}
+}
+
 Learning::~Learning()
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Distruct of Learning\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
-    os_type QOut(this->QPath), QLogOut(this->QLogPath);
-    QOut << this->Q;
-    QLogOut << this->QLog;
+    // os_type QOut(this->QPath), QLogOut(this->QLogPath);
+    // QOut << this->Q;
+    // QLogOut << this->QLog;
 }

@@ -1,28 +1,15 @@
 #include "Model.hpp"
 
-Model::Model(Int const &NumAction, st_type const &Mthd)
-{
-#ifdef DEBUG_CONSTRUCT_DISTRUCT
-    std::cout << "Construct of Model\t" << this << std::endl;
-#endif // DEBUG_CONSTRUCT_DISTRUCT
-
-    this->Num_Action = NumAction;
-    this->Method = Mthd;
-    this->Name_Model = "Kapitza";
-}
-
-Model::Model(sup_st_type &SP, st_type const &Mthd, vector_type const &XStart, Int const NumAction)
+Model::Model(st_type const &Mthd, st_type const &XName, vector_type const &XStart, Int const NumAction)
 {
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Construct of Model\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
     this->Method = Mthd;
-    SetPath(SP);
+    this->XPath = XName;
     SetStart(XStart);
     this->Num_Action = NumAction;
-    this->Active_Action = 1;
-    this->Name_Model = "Kapitza";
 }
 
 Model::Model(Model const &other)
@@ -32,9 +19,8 @@ Model::Model(Model const &other)
 #endif // DEBUG_CONSTRUCT_DISTRUCT
 
     this->Num_Action = other.Num_Action;
-    this->Name_Model = other.Name_Model;
     this->Start = other.Start;
-    this->Active_Action = other.Active_Action;
+    this->XPath = other.XPath;
 }
 
 void Model::SetStart(vector_type const &XStart)
@@ -45,8 +31,8 @@ void Model::SetStart(vector_type const &XStart)
 
 auto Model::U(Int const &Action) -> Real
 {
-    Real Rez{0.3};
-    return Action*Rez;
+    Real Rez{0.25};
+    return Action * Rez;
     // return Action - 1;
 }
 
@@ -54,11 +40,11 @@ auto Model::F(vector_type x, Real h) -> vector_type
 {
     vector_type Rez(x.size());
     Real g{9.81}, l{0.1}, mu{25};
-    Real k = g/(l*powl(mu,2.));
+    Real k = g / (l * powl(mu, 2.));
     // Real k{0.08};
-    Real a{1.5};
-    Rez[0] = k*x[1];
-    Rez[1] = -sinl(x[0])*((U(Active_Action)+a)*cosl(h)+1);
+    Real a{0.};
+    Rez[0] = k * x[1];
+    Rez[1] = -sinl(x[0]) * ((U(Active_Action) + a) * cosl(h) + 1);
     // Rez[0] = x[1];
     // Rez[1] = -sinl(x[0]) + U(Active_Action) * sgn(x[0]);
     return Rez;
@@ -69,29 +55,9 @@ void Model::WriteX(vector_type const &X)
     this->X.push_back(X);
 }
 
-void Model::SetPath(st_type &DP)
-{
-    st_type DataPath = "../" + Method + '_' + "Data";
-    mkdir(DataPath.c_str());
-    this->DataPath = DataPath + '/' + DP;
-}
-
-void Model::SetPath(sup_st_type &SP)
-{
-    st_type DataPath = "../" + Method + '_' + "Data";
-    mkdir(DataPath.c_str());
-    this->DataPath = DataPath + '/' + SP[0];
-    this->XPath = DataPath + '/' + SP[1];
-}
-
 void Model::SetNumActions(Int const &NumAction)
 {
     this->Num_Action = NumAction;
-}
-
-void Model::SetName(st_type const &Name)
-{
-    this->Name_Model = Name;
 }
 
 void Model::SetActiveAction(Int const Act)
@@ -115,7 +81,7 @@ auto Model::RungeKutta(vector_type &X_0, Real const &h, Real &dt) -> vector_type
 
 auto Model::Euler(vector_type &X_0, Real const &h, Real &dt) -> vector_type
 {
-    vector_type Rez = X_0 + dt*F(X_0,h);
+    vector_type Rez = X_0 + dt * F(X_0, h);
     return Rez;
 }
 auto Model::GetNumActions() const -> Int
@@ -130,15 +96,24 @@ auto Model::GetStart() -> vector_type
 
 auto Model::GetF0() -> vector_type
 {
-    auto F0 = F(Start,0.0);
+    auto F0 = F(Start, 0.0);
     return F0;
 }
 
-os_type &operator<<(os_type &os, const Model &M)
+auto Model::GetX() -> matrix_type
 {
-    os << "Name of Model\t" << M.Name_Model << std::endl;
-    os << "Number of Actions\t" << M.Num_Action << std::endl;
-    return os;
+    return this->X;
+}
+
+void Model::Reload()
+{
+    cout << "Reload of Model\t" << this << endl;
+    // this->Method.clear();
+    // this->XPath.clear();
+    // this->Start.clear();
+    this->X.clear();
+    SetStart(this->Start);
+    this->Active_Action = 0;
 }
 
 Model::~Model()
@@ -146,8 +121,4 @@ Model::~Model()
 #ifdef DEBUG_CONSTRUCT_DISTRUCT
     std::cout << "Distruct of Model\t" << this << std::endl;
 #endif // DEBUG_CONSTRUCT_DISTRUCT
-
-    os_type ModelOut{this->DataPath}, XOut{this->XPath};
-    ModelOut << *this;
-    XOut << this->X;
 }
