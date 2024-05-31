@@ -150,6 +150,16 @@ int main()
      v3.insert(v3.begin() + 3, 0);
      cout << v3 << endl;
 
+     vector_type vec_to_read;
+     ifstream in("../Mesh.txt");
+     in >> vec_to_read;
+     in.close();
+     cout << vec_to_read << endl;
+     matrix_type mat_to_read;
+     ifstream in_mat("../FileTest.txt");
+     in_mat >> mat_to_read;
+     cout << mat_to_read << endl;
+
 #endif // DEBUG_INFO
 
 #ifdef DEBUG_CLASSES
@@ -167,31 +177,96 @@ int main()
      vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
 
      Model Q_Model(methodQLearning, Track, Start, 20);
+     Model SARSA_Model(methodSARSA, Track, Start, 20);
 
-     Mesh Q_Mesh(meshSt,GPos,methodQLearning,NamesMesh);
+     Mesh Q_Mesh(meshSt, GPos, methodQLearning, NamesMesh);
+     Mesh SARSA_Mesh(meshSt, GPos, methodSARSA, NamesMesh);
 
-     Learning Q(Settings,Q_Model,Q_Mesh);
+     Learning Q(Settings, Q_Model, Q_Mesh);
      Q.SetTime(TimeLearn);
      Q.SetMethod(methodQLearning);
-     Int Epo{2600};
+     Learning SARSA(Settings, SARSA_Model, SARSA_Mesh);
+     SARSA.SetTime(TimeLearn);
+     SARSA.SetMethod(methodSARSA);
 
      Data Q_Data(methodQLearning);
+     Data SARSA_Data(methodSARSA);
 
-     for (Int i = 1; i < 5; i++)
+#endif // DEBUG_CLASSES
+
+#ifdef LEARN
+     st_type methodQLearning{"Q-Learning"}, methodSARSA{"SARSA"};
+     st_type Track{"Track.txt"};
+     st_type MeshName{"Mesh.txt"}, MeshHistoryName{"MeshHistory.txt"};
+     st_type StateCountName{"StateCount.txt"}, StateCountHistoryName{"StateCountHistory.txt"};
+     sup_st_type NamesMesh{MeshName, MeshHistoryName, StateCountName, StateCountHistoryName};
+
+     vector_type meshSt{-INFINITY, -5, -1, -0.5, -0.1, 0, 0.05, 0.1, 0.3, 0.5, 1, 3, 5, INFINITY};
+     Int GPos = FindIndex(meshSt, 0);
+
+     vector_type Start{numbers::pi / 5, 0.2};
+     vector_type TimeLearn{0., 0.1, 10};
+     vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
+
+     Model Q_Model(methodQLearning, Track, Start, 20);
+     Model SARSA_Model(methodSARSA, Track, Start, 20);
+
+     Mesh Q_Mesh(meshSt, GPos, methodQLearning, NamesMesh);
+     Mesh SARSA_Mesh(meshSt, GPos, methodSARSA, NamesMesh);
+
+     Learning Q(Settings, Q_Model, Q_Mesh);
+     Q.SetTime(TimeLearn);
+     Q.SetMethod(methodQLearning);
+     Learning SARSA(Settings, SARSA_Model, SARSA_Mesh);
+     SARSA.SetTime(TimeLearn);
+     SARSA.SetMethod(methodSARSA);
+
+     Data Q_Data(methodQLearning);
+     Data SARSA_Data(methodSARSA);
+
+     Int Epo{1000};
+     for (Int i = 1; i < 4; i++)
      {
           Q_Data.MakeLearnDir(i);
+          SARSA_Data.MakeLearnDir(i);
+
           Q.Run(Epo);
-          Q_Data.WriteMatrix(Q.GetMatrix("Q"),"Q.txt");
-          Q_Data.WriteMatrix(Q.GetMatrix("QLog"),"QLog.txt");
-          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("Mesh"),MeshHistoryName);
-          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("StateCount"),StateCountHistoryName);
-          Q_Data.WriteVector(Q_Mesh.GetVector("Mesh"),MeshName);
-          Q_Data.WriteVector(Q_Mesh.GetVector("StateCount"),StateCountName);
+
+          Q_Data.WriteMatrix(Q.GetMatrix("Q"), "Q.txt");
+          Q_Data.WriteMatrix(Q.GetMatrix("QLog"), "QLog.txt");
+          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("Mesh"), MeshHistoryName);
+          Q_Data.WriteMatrix(Q_Mesh.GetMatrix("StateCount"), StateCountHistoryName);
+          Q_Data.WriteVector(Q_Mesh.GetVector("Mesh"), MeshName);
+          Q_Data.WriteVector(Q_Mesh.GetVector("StateCount"), StateCountName);
+
           Q_Model.Reload();
-          Q_Mesh.Reload(meshSt,GPos);
+          Q_Mesh.Reload(meshSt, GPos);
           Q.Reload(Settings);
+
+          SARSA.Run(Epo);
+
+          SARSA_Data.WriteMatrix(SARSA.GetMatrix("Q"), "Q.txt");
+          SARSA_Data.WriteMatrix(SARSA.GetMatrix("QLog"), "QLog.txt");
+          SARSA_Data.WriteMatrix(SARSA_Mesh.GetMatrix("Mesh"), MeshHistoryName);
+          SARSA_Data.WriteMatrix(SARSA_Mesh.GetMatrix("StateCount"), StateCountHistoryName);
+          SARSA_Data.WriteVector(SARSA_Mesh.GetVector("Mesh"), MeshName);
+          SARSA_Data.WriteVector(SARSA_Mesh.GetVector("StateCount"), StateCountName);
+
+          SARSA_Model.Reload();
+          SARSA_Mesh.Reload(meshSt, GPos);
+          SARSA.Reload(Settings);
+     }
+
+#endif // LEARN
+
+#ifdef TEST
+     for (Int i = 1; i < 4; i++)
+     {
+          Q_Data.MakeTestDir(i);
+          
      }
      
-#endif // DEBUG_CLASSES
+#endif // TEST
+
      return 0;
 }

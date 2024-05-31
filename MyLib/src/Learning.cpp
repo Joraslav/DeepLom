@@ -105,7 +105,7 @@ void Learning::Run(Int const Episode)
          << std::endl;
     while (Epoch <= Episode)
     {
-        if (Epoch % 50 == 0)
+        if (Epoch % 100 == 0)
         {
             this->Eps = this->Eps * 0.5;
             // this->Gam = this->Gam + 0.05;
