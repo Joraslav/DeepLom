@@ -71,7 +71,7 @@ void Data::MakeTestDir(Int I, Int J)
     {
         J_str = '0' + J_str;
     }
-    this->Actual_Test_Dir = this->DataPath + "/Test" + this->Method + "_Data_" + I_str + J_str;
+    this->Actual_Test_Dir = this->DataPath + "/Test" + this->Method + "_Data_" + I_str + '_' + J_str;
     this->Actual_Dir = this->Actual_Test_Dir;
     if (filesystem::exists(this->Actual_Test_Dir))
     {

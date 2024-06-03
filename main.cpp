@@ -206,7 +206,7 @@ int main()
      Int GPos = FindIndex(meshSt, 0);
 
      vector_type Start{numbers::pi / 5, 0.2};
-     vector_type TimeLearn{0., 0.1, 10}; /*t0, dt, T*/
+     vector_type TimeLearn{0., 0.1, 10};    /*t0, dt, T*/
      vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
 
      Model Q_Model(methodQLearning, Track, Start, 20);
@@ -225,8 +225,8 @@ int main()
      Data Q_Data(methodQLearning);
      Data SARSA_Data(methodSARSA);
 
-     Int Epo{1000};
-     for (Int i = 1; i < 4; i++)
+     Int Epo{2000};
+     for (Int i = 1; i < 31; i++)
      {
           Q_Data.MakeLearnDir(i);
           SARSA_Data.MakeLearnDir(i);
@@ -260,10 +260,6 @@ int main()
 
 #endif // LEARN
 
-vector_type MeshTest;
-ifstream mesh_in("../Mesh.txt");
-mesh_in >> MeshTest;
-
 #ifdef TEST
 
      random_device rd;
@@ -271,7 +267,7 @@ mesh_in >> MeshTest;
      uniform_real_distribution<> dist(-numbers::pi / 3, numbers::pi / 3);
 
      Test Q_Test(Q_Model, Q_Mesh);
-     for (Int i = 1; i < 4; i++)
+     for (Int i = 1; i < 31; i++)
      {
           st_type i_str = to_string(i);
           if (i < 10)
@@ -310,6 +306,47 @@ mesh_in >> MeshTest;
                Q_Data.WriteVector(Q_Test.GetMetric(), "Metric.txt");
 
                Q_Test.Reload();
+          }
+     }
+
+     Test SARSA_Test(SARSA_Model, SARSA_Mesh);
+     for (Int i = 1; i < 31; i++)
+     {
+          st_type i_str = to_string(i);
+          if (i < 10)
+          {
+               i_str = '0' + i_str;
+          }
+          st_type Path_to{"../Data_All/SARSA_Data_" + i_str};
+          st_type Path_to_Mesh = Path_to + '/' + "Mesh.txt";
+          st_type Path_to_Q = Path_to + '/' + "QLog.txt";
+          vector_type Mesh;
+          matrix_type QLog;
+          if_type mesh_in(Path_to_Mesh);
+          if_type qlog_in(Path_to_Q);
+          mesh_in >> Mesh;
+          mesh_in.close();
+          qlog_in >> QLog;
+          qlog_in.close();
+
+          vector_type TimeTest{0., 0.1, 200}; /*t0, dt, T*/
+
+          SARSA_Test.SetMesh(Mesh);
+          SARSA_Test.SetQLog(QLog);
+          SARSA_Test.SetTime(TimeTest);
+
+          for (Int j = 1; j < 21; j++)
+          {
+               SARSA_Data.MakeTestDir(i, j);
+
+               vector_type TestStart{dist(gen), 0.08};
+               SARSA_Test.SetStart(TestStart);
+               SARSA_Test.RunTest();
+
+               SARSA_Data.WriteMatrix(Q_Test.GetTrack(), "Track.txt");
+               SARSA_Data.WriteVector(Q_Test.GetMetric(), "Metric.txt");
+
+               SARSA_Test.Reload();
           }
      }
 
