@@ -23,6 +23,7 @@ public:
     Data(st_type Met);
     void MakeLearnDir(Int iter);
     void MakeTestDir(Int iter);
+    void MakeTestDir(Int I, Int J);
     void WriteMatrix(matrix_type const &Matrix, st_type const Name);
     void WriteVector(vector_type const &Vec, st_type const Name);
     ~Data();

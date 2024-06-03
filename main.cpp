@@ -10,6 +10,7 @@
 #include "Mesh.hpp"
 #include "Learning.hpp"
 #include "Data.hpp"
+#include "Test.hpp"
 
 #ifdef DEBUG_MLPACK
 #include <mlpack.hpp>
@@ -205,7 +206,7 @@ int main()
      Int GPos = FindIndex(meshSt, 0);
 
      vector_type Start{numbers::pi / 5, 0.2};
-     vector_type TimeLearn{0., 0.1, 10};
+     vector_type TimeLearn{0., 0.1, 10}; /*t0, dt, T*/
      vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
 
      Model Q_Model(methodQLearning, Track, Start, 20);
@@ -259,13 +260,59 @@ int main()
 
 #endif // LEARN
 
+vector_type MeshTest;
+ifstream mesh_in("../Mesh.txt");
+mesh_in >> MeshTest;
+
 #ifdef TEST
+
+     random_device rd;
+     mt19937 gen(rd());
+     uniform_real_distribution<> dist(-numbers::pi / 3, numbers::pi / 3);
+
+     Test Q_Test(Q_Model, Q_Mesh);
      for (Int i = 1; i < 4; i++)
      {
-          Q_Data.MakeTestDir(i);
-          
+          st_type i_str = to_string(i);
+          if (i < 10)
+          {
+               i_str = '0' + i_str;
+          }
+          st_type Path_to{"../Data_All/Q-Learning_Data_" + i_str};
+          st_type Path_to_Mesh = Path_to + '/' + "Mesh.txt";
+          st_type Path_to_Q = Path_to + '/' + "QLog.txt";
+          vector_type Mesh;
+          matrix_type QLog;
+          if_type mesh_in(Path_to_Mesh);
+          if_type qlog_in(Path_to_Q);
+          mesh_in >> Mesh;
+          mesh_in.close();
+          qlog_in >> QLog;
+          qlog_in.close();
+
+          vector_type TimeTest{0., 0.1, 200}; /*t0, dt, T*/
+
+          Q_Test.SetMesh(Mesh);
+          Q_Test.SetQLog(QLog);
+          Q_Test.SetTime(TimeTest);
+
+          // Q_Test.ReadMesh(Path_to_Mesh);
+          // Q_Test.ReadQLog(Path_to_Q);
+          for (Int j = 1; j < 21; j++)
+          {
+               Q_Data.MakeTestDir(i, j);
+
+               vector_type TestStart{dist(gen), 0.08};
+               Q_Test.SetStart(TestStart);
+               Q_Test.RunTest();
+
+               Q_Data.WriteMatrix(Q_Test.GetTrack(), "Track.txt");
+               Q_Data.WriteVector(Q_Test.GetMetric(), "Metric.txt");
+
+               Q_Test.Reload();
+          }
      }
-     
+
 #endif // TEST
 
      return 0;

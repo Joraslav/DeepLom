@@ -59,6 +59,30 @@ void Data::MakeTestDir(Int iter)
     }
 }
 
+void Data::MakeTestDir(Int I, Int J)
+{
+    st_type I_str = to_string(I);
+    st_type J_str = to_string(J);
+    if (I < 10)
+    {
+        I_str = '0' + I_str;
+    }
+    if (J < 10)
+    {
+        J_str = '0' + J_str;
+    }
+    this->Actual_Test_Dir = this->DataPath + "/Test" + this->Method + "_Data_" + I_str + J_str;
+    this->Actual_Dir = this->Actual_Test_Dir;
+    if (filesystem::exists(this->Actual_Test_Dir))
+    {
+        cout << "Path to test Existence" << endl;
+    }
+    else
+    {
+        mkdir(this->Actual_Test_Dir.c_str());
+    }
+}
+
 void Data::WriteVector(vector_type const &Vec, st_type const Name)
 {
     os_type Vec_Out(this->Actual_Dir + '/' + Name);
