@@ -195,6 +195,9 @@ int main()
 
 #endif // DEBUG_CLASSES
 
+Int Num_Learn = 3;
+Int Num_Test = 6;
+
 #ifdef LEARN
      st_type methodQLearning{"Q-Learning"}, methodSARSA{"SARSA"};
      st_type Track{"Track.txt"};
@@ -206,7 +209,7 @@ int main()
      Int GPos = FindIndex(meshSt, 0);
 
      vector_type Start{numbers::pi / 5, 0.2};
-     vector_type TimeLearn{0., 0.1, 10};    /*t0, dt, T*/
+     vector_type TimeLearn{0., 0.01, 10};    /*t0, dt, T*/
      vector_type Settings{0.55, 0.6, 0.48}; /*Eps, Alf, Gam*/
 
      Model Q_Model(methodQLearning, Track, Start, 20);
@@ -226,7 +229,7 @@ int main()
      Data SARSA_Data(methodSARSA);
 
      Int Epo{2000};
-     for (Int i = 1; i < 31; i++)
+     for (Int i = 1; i <= Num_Learn; i++)
      {
           Q_Data.MakeLearnDir(i);
           SARSA_Data.MakeLearnDir(i);
@@ -267,7 +270,7 @@ int main()
      uniform_real_distribution<> dist(-numbers::pi / 3, numbers::pi / 3);
 
      Test Q_Test(Q_Model, Q_Mesh);
-     for (Int i = 1; i < 31; i++)
+     for (Int i = 1; i <= Num_Learn; i++)
      {
           st_type i_str = to_string(i);
           if (i < 10)
@@ -286,7 +289,7 @@ int main()
           qlog_in >> QLog;
           qlog_in.close();
 
-          vector_type TimeTest{0., 0.1, 200}; /*t0, dt, T*/
+          vector_type TimeTest{0., 0.01, 1000}; /*t0, dt, T*/
 
           Q_Test.SetMesh(Mesh);
           Q_Test.SetQLog(QLog);
@@ -294,7 +297,7 @@ int main()
 
           // Q_Test.ReadMesh(Path_to_Mesh);
           // Q_Test.ReadQLog(Path_to_Q);
-          for (Int j = 1; j < 21; j++)
+          for (Int j = 1; j <= Num_Test; j++)
           {
                Q_Data.MakeTestDir(i, j);
 
@@ -310,7 +313,7 @@ int main()
      }
 
      Test SARSA_Test(SARSA_Model, SARSA_Mesh);
-     for (Int i = 1; i < 31; i++)
+     for (Int i = 1; i <= Num_Learn; i++)
      {
           st_type i_str = to_string(i);
           if (i < 10)
@@ -329,13 +332,13 @@ int main()
           qlog_in >> QLog;
           qlog_in.close();
 
-          vector_type TimeTest{0., 0.1, 200}; /*t0, dt, T*/
+          vector_type TimeTest{0., 0.01, 1000}; /*t0, dt, T*/
 
           SARSA_Test.SetMesh(Mesh);
           SARSA_Test.SetQLog(QLog);
           SARSA_Test.SetTime(TimeTest);
 
-          for (Int j = 1; j < 21; j++)
+          for (Int j = 1; j <= Num_Test; j++)
           {
                SARSA_Data.MakeTestDir(i, j);
 
@@ -343,8 +346,8 @@ int main()
                SARSA_Test.SetStart(TestStart);
                SARSA_Test.RunTest();
 
-               SARSA_Data.WriteMatrix(Q_Test.GetTrack(), "Track.txt");
-               SARSA_Data.WriteVector(Q_Test.GetMetric(), "Metric.txt");
+               SARSA_Data.WriteMatrix(SARSA_Test.GetTrack(), "Track.txt");
+               SARSA_Data.WriteVector(SARSA_Test.GetMetric(), "Metric.txt");
 
                SARSA_Test.Reload();
           }
